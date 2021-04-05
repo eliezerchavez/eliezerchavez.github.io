@@ -26,19 +26,24 @@
 	<!-- MS Tile - for Microsoft apps-->
 	<meta name="msapplication-TileImage" content="{{ page.featured_image | absolute_url }}">
 
+	<!-- Google / Search Engine Tags -->
+	<meta itemprop="name" content="{% if page.url == "/" %}{{ site.data.settings.basic_settings.site_title }} – {{ page.title }}{% else %}{{ page.title }} – {{ site.data.settings.basic_settings.site_title }}{% endif %}">
+	<meta itemprop="description" content="{{ page.description | strip_html | xml_escape }}">
+	<meta itemprop="image" content="{{ page.featured_image | absolute_url }}">
+
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:title" content="{% if page.url == "/" %}{{ site.data.settings.basic_settings.site_title }} – {{ page.title }}{% else %}{{ page.title }} – {{ site.data.settings.basic_settings.site_title }}{% endif %}">
 	<meta name="twitter:description" content="{{ page.description | strip_html | xml_escape }}">
-	<meta name="twitter:image:src" content="{{ page.featured_image | absolute_url }}">
+	<meta name="twitter:image" content="{{ page.featured_image | absolute_url }}">
 
 	<!-- Facebook OpenGraph -->
-	<meta property="og:title" content="{% if page.url == "/" %}{{ site.data.settings.basic_settings.site_title }} – {{ page.title }}{% else %}{{ page.title }} – {{ site.data.settings.basic_settings.site_title }}{% endif %}" />
 	<meta property="og:url" content="{{ site.url }}{{ page.url }}" />
-	<meta property="og:image" content="{{ page.featured_image | absolute_url }}" />
 	<meta property="og:type" content="{% if page.type == "Post" %}article{% else %}website{% endif %}" />
+	<meta property="og:title" content="{% if page.url == "/" %}{{ site.data.settings.basic_settings.site_title }} – {{ page.title }}{% else %}{{ page.title }} – {{ site.data.settings.basic_settings.site_title }}{% endif %}" />
 	<meta property="og:description" content="{{ page.description | strip_html | xml_escape }}" />
-
+	<meta property="og:image" content="{{ page.featured_image | absolute_url }}" />
+	
 	{% if site.data.settings.font_settings.font_embed %}
 	<!-- Font Embed Code -->
 	{{ site.data.settings.font_settings.font_embed }}
