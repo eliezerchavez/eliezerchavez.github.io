@@ -153,25 +153,7 @@ font_settings:
 
 advanced_settings:
   ajax_loading: true
-  analytics_code: |
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BFVTW92T0X"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-BFVTW92T0X');
-        </script>
-  custom_styles: |
-    @font-face {
-              font-family: 'Gilroy ExtraBold';
-              src: url('/fonts/Gilroy-ExtraBold.eot'); /* IE9 Compat Modes */
-              src: url('/fonts/Gilroy-ExtraBold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-                  url('/fonts/Gilroy-ExtraBold.woff2') format('woff2'), /* Super Modern Browsers */
-                  url('/fonts/Gilroy-ExtraBold.woff') format('woff'), /* Pretty Modern Browsers */
-                  url('/fonts/Gilroy-ExtraBold.ttf')  format('truetype'), /* Safari, Android, iOS */
-                  url('/fonts/Gilroy-ExtraBold.otf') format('opentype');
-            }
+  analytics_code: 'G-BFVTW92T0X'
+  custom_styles: true
   header_js: ""
   footer_js: ""

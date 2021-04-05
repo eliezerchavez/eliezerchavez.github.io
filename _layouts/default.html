@@ -55,14 +55,12 @@
 
 	{% if site.data.settings.advanced_settings.custom_styles %}
 	<!-- Custom Styles -->
-	<style>
-		{{ site.data.settings.advanced_settings.custom_styles }}
-	</style>
+	{% include custom-styles.html %}
 	{% endif %}
 
 	{% if site.data.settings.advanced_settings.analytics_code %}
 	<!-- Analytics Code -->
-	{{ site.data.settings.advanced_settings.analytics_code }}
+	{% include analytics.html %}
 	{% endif %}
 
 	{% if site.data.settings.advanced_settings.header_js %}
