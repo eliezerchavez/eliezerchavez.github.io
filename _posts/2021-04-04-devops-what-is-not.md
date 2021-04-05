@@ -2,7 +2,7 @@
 title: 'DevOps, what is NOT'
 type: 'Post'
 date: 2021-04-04 20:00:00
-description: DevOps, what is? and more importantly, what is not. DevOps incorporates a collaborative culture that embraces numerous practices combined together for a continuous software development methodology that places significant emphasis on feedback loops and continuous improvement. Instead of highlighting everything that DevOps is, I thought it would be good to take a step back and highlight what DevOps is not instead.
+description: DevOps, what is? Well, DevOps incorporates a collaborative culture that embraces numerous practices combined together for a continuous software development methodology that places significant emphasis on feedback loops and continuous improvement. In this article, instead of highlighting everything that DevOps is, I thought it would be good to take a step back and highlight what DevOps is not.
 featured_image: '/images/posts/20210404/featured.png'
 comments: true
 ---
