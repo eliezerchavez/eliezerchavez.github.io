@@ -156,5 +156,5 @@ advanced_settings:
   ajax_loading: false
   analytics_code: 'G-BFVTW92T0X'
   custom_styles: true
-  header_js: ""
-  footer_js: ""
+  header_js: ''
+  footer_js: ''
