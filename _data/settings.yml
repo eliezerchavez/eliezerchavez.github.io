@@ -153,7 +153,7 @@ font_settings:
 
 advanced_settings:
   addthis: 'ra-606b7c5b7c462998'
-  ajax_loading: true
+  ajax_loading: false
   analytics_code: 'G-BFVTW92T0X'
   custom_styles: true
   header_js: ""
