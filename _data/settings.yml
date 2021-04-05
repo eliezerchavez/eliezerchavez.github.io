@@ -18,7 +18,7 @@ menu_settings:
       url: '/contact'
 
 footer_settings:
-  footer_tagline: '<button class="termly-cookie-preference-button" type="button" style="background: white; width: 165px; height: 30px; border-radius: 3px; border: 1px solid #5f7d9c; font-family: Roboto, Arial; font-size: 10px; color: #5f7d9c; font-weight: 600; box-sizing: border-box; cursor: pointer; padding: 0; outline: none;" onclick="displayPreferenceModal()">Manage Cookie Preferences</button>'
+  footer_tagline: '<button class="termly-cookie-preference-button" type="button" style="background: white; width: 165px; height: 30px; border-radius: 3px; border: 1px solid #8ebef2; font-family: Roboto, Arial; font-size: 10px; color: #8ebef2; font-weight: 600; box-sizing: border-box; cursor: pointer; padding: 0; outline: none;" onclick="displayPreferenceModal()">Manage Cookie Preferences</button>'
 
 hero_settings:
   overlay_opacity: 0.4
