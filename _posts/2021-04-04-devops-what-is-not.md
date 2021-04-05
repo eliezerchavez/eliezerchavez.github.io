@@ -7,6 +7,7 @@ featured_image: '/images/posts/20210404/featured.png'
 comments: true
 redirect_from:
   - /blog/devops-what-is-not
+addthis: true
 ---
 
 I can start this post talking about what is DevOps from a pure academic perspective but, instead of doing the obvious: I am going to tell you what DevOps is not.
