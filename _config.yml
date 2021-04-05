@@ -9,10 +9,10 @@ collections:
     permalink: /:name
   posts:
     output: true
-    permalink: /blog/:slug
+    permalink: /blog/:year/:month/:day/:title/
   projects:
     output: true
-    permalink: /project/:slug
+    permalink: /project/:year/:month/:day/:title/
 
 defaults:
   -
