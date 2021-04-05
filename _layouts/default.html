@@ -14,7 +14,20 @@
 
 	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	{% include quantcast-choice.html %}
+	{% if site.data.settings.advanced_settings.google_tag_manager %}
+	<!-- Google Tag Manager -->
+	<script>(function (w, d, s, l, i) {
+			w[l] = w[l] || []; w[l].push({
+				'gtm.start':
+					new Date().getTime(), event: 'gtm.js'
+			}); var f = d.getElementsByTagName(s)[0],
+				j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+					'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+		})(window, document, 'script', 'dataLayer', '{{ site.data.settings.advanced_settings.google_tag_manager }}');</script>
+	<!-- End Google Tag Manager -->
+	{% endif %}
+
+	<!--{% include quantcast-choice.html %}-->
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -79,6 +92,13 @@
 
 
 <body class="loading{% if site.data.settings.advanced_settings.ajax_loading == true %} ajax-loading{% endif %}" data-site-url="{{ site.url }}" data-page-url="{{ page.url | replace: 'index.html', '' }}">
+	
+	{% if site.data.settings.advanced_settings.google_tag_manager %}
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ site.data.settings.advanced_settings.google_tag_manager }}"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+	{% endif %}
 
 	{% include header.html %}
 

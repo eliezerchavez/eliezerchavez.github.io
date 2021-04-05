@@ -155,6 +155,7 @@ advanced_settings:
   addthis: 'ra-606b7c5b7c462998'
   ajax_loading: false
   analytics_code: 'G-BFVTW92T0X'
+  google_tag_manager: 'GTM-M7P9Q95'
   custom_styles: true
   header_js: ''
   footer_js: ''
