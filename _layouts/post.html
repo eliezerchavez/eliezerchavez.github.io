@@ -22,9 +22,10 @@ layout: default
 	<div class="wrap">
 
 		<article class="single-post">
-
+			{% include likebtn.html %}
 			{{ page.content }}
 
+			<div style="float:right;margin-top:20px">[ last edited on {{ page.last_modified_at | date: ' %B %d, %Y at %r GMT%Z' }} ]</div>
 		</article>
 
 		{% if site.disqus.shortname %}
