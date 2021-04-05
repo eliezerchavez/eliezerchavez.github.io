@@ -34,7 +34,7 @@
 
 	<!-- Facebook OpenGraph -->
 	<meta property="og:title" content=" – eliezerchavez" />
-	<meta property="og:url" content="http://eliezer.io:4000/jekyll.template" />
+	<meta property="og:url" content="https://eliezer.io/jekyll.template" />
 	<meta property="og:image" content="" />
 	<meta property="og:type" content="website" />
 	<meta property="og:description" content="" />
@@ -91,7 +91,7 @@
 </head>
 
 
-<body class="loading ajax-loading" data-site-url="http://eliezer.io:4000" data-page-url="/jekyll.template">
+<body class="loading ajax-loading" data-site-url="https://eliezer.io" data-page-url="/jekyll.template">
 
 
 	<header class="header">
