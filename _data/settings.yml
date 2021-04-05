@@ -152,7 +152,7 @@ font_settings:
     letter_spacing: 0
 
 advanced_settings:
-  # addthis: 'ra-606b7c5b7c462998'
+  addthis: 'ra-606b7c5b7c462998'
   ajax_loading: true
   analytics_code: 'G-BFVTW92T0X'
   custom_styles: true
