@@ -12,8 +12,6 @@ I am available to provide training and advisory support in the areas of architec
 
 If you want to enquire as to my fees, availability, and get more information about the services I offer, then please get in touch.
 
-Please note though that my calendar is pretty crowded and my main professional commitment is with my actual employer, **everis**. That being said: I really appreciate as much notice as possible and please, do not be offended if I say I can not make it!
-
 #### <span style="color:#4888bc">A little bit more about me. Like anyone cares.</span>
 
 Love digging into customer problems and solve them with the latest technology available while create, scale, and optimize solutions that matter.
