@@ -10,7 +10,7 @@ featured_image: /images/about.jpg
 ### <span style="color:#4888bc">Want Me To Work With You?</span>
 I am available to provide training and advisory support in the areas of architecture, cloud, and continuous delivery. I am also available to speak at both private and public events.
 
-If you want to enquire as to my fees, availability, and get more information about the services I offer, then please get in touch.
+If you want to enquire as to my fees, availability, and get more information about the services I offer, then please [get in touch](/contact).
 
 #### <span style="color:#4888bc">A little bit more about me. Like anyone cares.</span>
 
