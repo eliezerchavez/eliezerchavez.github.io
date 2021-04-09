@@ -9,7 +9,7 @@ description: |
   •	Culture is very important.<br/>
   •	Feedback is fuel for innovation.<br/>
   •	Automation helps.
-featured_image: '/images/posts/20210408/featured.png'
+featured_image: '/images/posts/20210408/featured.jpg'
 comments: true
 addthis: true
 ---
