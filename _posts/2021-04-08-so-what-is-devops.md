@@ -3,7 +3,7 @@ title: 'So, what IS DevOps'
 type: 'Post'
 date: 2021-04-08 20:00:00
 description: |
-DevOps is the ability to bring new software to market faster.
+  DevOps is the ability to bring new software to market faster.
   •	DevOps exists to help the business win.<br/>
   •	The scope is broad, but centered on IT.<br/>
   •	The foundations are found in Agile and Lean.<br/>
