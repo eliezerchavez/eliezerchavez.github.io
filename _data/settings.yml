@@ -18,7 +18,7 @@ menu_settings:
       url: '/contact'
 
 footer_settings:
-  footer_tagline: 'with collaboration of <b>317 Group</b>'
+  footer_tagline: 'with collaboration of <a href="https://www.instagram.com/317studiovzla" target="_blank"><img src="/images/317.png" style="display:inline-block; height:1.5rem"></a>'
 
 hero_settings:
   overlay_opacity: 0.4
