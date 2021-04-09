@@ -3,6 +3,7 @@ title: 'So, what IS DevOps'
 type: 'Post'
 date: 2021-04-08 20:00:00
 description: |
+DevOps is the ability to bring new software to market faster.
   •	DevOps exists to help the business win.<br/>
   •	The scope is broad, but centered on IT.<br/>
   •	The foundations are found in Agile and Lean.<br/>
@@ -18,7 +19,7 @@ Before getting into post’s matter, I am going to give a brief explanation abou
 
 Besides that, some of my “technical citizens” friends asked me to explain them, with just enough deep, what is this whole DevOps movement about, and that is what I propose to do. You can find the first article of this series in [here](/blog/2021/04/04/devops-what-is-not/)
 
-### <span style="color:#4888bc">So, what IS DevOps?</span>
+### <span style="color:#4888bc">What is DevOps?</span>
 > DevOps (a clipped compound of “development” and “operations”) is a software engineering culture and practice that aims at unifying software development (Dev) and software operation (Ops). The main characteristic of the DevOps movement is to strongly advocate automation and monitoring at all streps of software construction, from integration, testing, releasing to deployment and infrastructure management. DevOps aims at shorter development cycles, increased deployment frequency, and more dependable release, in close alignment with business objectives. (Mala, 2019)
 
 Do you want it really short? **DevOps is the ability to bring new software to market faster.**
