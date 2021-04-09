@@ -53,4 +53,4 @@ Because there are so many different business drivers and technologies to conside
 
 As an example, if you initially identify a tool that no longer works for your technology or environment, abandon it, and move on. Just because you used it on the last project does not make it a silver-bullet fix for the next one. We need to first understand our current strategy and environment, then react accordingly.
 
-This is the first of a series of articles looking at DevOps from the very bottom to the latest trends in the industry, so, *stay tuned!*
+This is the first of a series of articles looking at DevOps from the very bottom to the latest trends in the industry, to read the next one, please go [here](/blog/2021/04/08/so-what-is-devops/).

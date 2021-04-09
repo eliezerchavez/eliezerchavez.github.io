@@ -9,14 +9,19 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Header
 
 .header {
-	margin-top: 20px;
+
+	background-color: #1d324c;
+	padding-top: 20px;
+	padding-bottom: 20px;
 
 	@include mq(tabletp) {
-		margin-top: 25px;
+		padding-top: 25px;
+		padding-bottom: 25px;
 	}
 
 	@include mq(laptop) {
-		margin-top: 30px;
+		padding-top: 30px;
+		padding-bottom: 30px;
 	}
 }
 
@@ -170,6 +175,7 @@
 }
 
 .menu__list {
+	
 	list-style: none;
 	margin: 0 auto;
 	padding: 20px;
@@ -201,7 +207,7 @@
 .menu__list__item__link {
 	font-size: $menu-small;
 	font-weight: $menu-weight;
-	color: $text-dark-color;
+	color: #ffffff; // include in settings.yml
 	padding: 10px 0;
 
 	&:hover {
@@ -212,7 +218,7 @@
 		display: block;
 		padding: 0 0 8px;
 		font-size: $menu-medium;
-		color: $text-dark-color;
+		color: #ffffff;
 
 		&:hover {
 			color: $accent-color;
