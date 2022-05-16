@@ -5,7 +5,7 @@ description: Cloud & DevOps
 featured_image: /images/about.jpg
 ---
 
-> I am a Solutions Architect specializing in Cloud (Amazon Web Services & Azure), DevOps, CI/CD, SRE and IT Operations. Currently an Expert Architect at [everis](https://www.everis.com/global/en). I am capable with a **wide** range of technical and big-picture architectural tasks.
+> I am a Solutions Architect specializing in Cloud (Amazon Web Services & Azure), DevOps, CI/CD, SRE and IT Operations. Currently a Senior Project Manager and Expert Architect at [NTT DATA](https://emeal.usbranch.nttdata.com/). I am capable with a **wide** range of technical and big-picture architectural tasks.
 
 ### <span style="color:#4888bc">Want Me To Work With You?</span>
 I am available to provide training and advisory support in the areas of architecture, cloud, and continuous delivery. I am also available to speak at both private and public events.
