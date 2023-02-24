@@ -1,7 +1,7 @@
 site: eliezerchavez
 
-url: https://eliezer.io
-baseurl: 
+url: https://eliezerchavez.com
+baseurl: /
 
 collections:
   pages:
