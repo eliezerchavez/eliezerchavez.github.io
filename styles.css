@@ -12,37 +12,36 @@
 body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Gilroy';
+  font-family: 'Gilroy', sans-serif;
   background-image: url('background.webp');
   background-size: cover;
   background-position: center;
   height: 100vh;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding-left: 200px;
-  margin-left: 200px;
-  background-color: rgba(0, 0, 0, 0.33);
+  align-items: center;
   padding: 20px;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
+  max-width: 90%;
+  text-align: center;
 }
 
 .logo {
-  width: 200px;
+  width: 100%;
+  max-width: 200px;
   height: auto;
   margin-bottom: 20px;
 }
 
 .contact-btn {
-  font-size: 18px;
-  font-family: 'Gilroy';
+  font-size: 16px;
   padding: 10px 20px;
   background-color: white;
   color: black;
@@ -50,8 +49,6 @@ body {
   border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
-  text-align: center;
-  align-self: center;
 }
 
 .contact-btn:hover {
@@ -59,7 +56,24 @@ body {
   color: black;
 }
 
+@media (max-width: 768px) {
+  .container {
+      padding: 15px;
+  }
 
+  .contact-btn {
+      font-size: 14px;
+      padding: 8px 16px;
+  }
+}
 
+@media (max-width: 480px) {
+  .logo {
+      max-width: 150px;
+  }
 
-
+  .contact-btn {
+      font-size: 12px;
+      padding: 6px 12px;
+  }
+}
