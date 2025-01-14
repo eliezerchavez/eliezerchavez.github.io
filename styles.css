@@ -1,0 +1,65 @@
+@font-face {
+  font-family: 'Gilroy';
+  src: url('https://cdn.jsdelivr.net/gh/repalash/gilroy-free-webfont@fonts/Gilroy-Extrabold.eot');
+  src: local('Gilroy Extrabold'), local('Gilroy-Extrabold'),
+  url('https://cdn.jsdelivr.net/gh/repalash/gilroy-free-webfont@fonts/Gilroy-Extrabold.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.jsdelivr.net/gh/repalash/gilroy-free-webfont@fonts/Gilroy-Extrabold.woff') format('woff'),
+  url('https://cdn.jsdelivr.net/gh/repalash/gilroy-free-webfont@fonts/Gilroy-Extrabold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Gilroy';
+  background-image: url('background.webp');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 200px;
+  margin-left: 200px;
+  background-color: rgba(0, 0, 0, 0.33);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.logo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.contact-btn {
+  font-size: 18px;
+  font-family: 'Gilroy';
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-align: center;
+  align-self: center;
+}
+
+.contact-btn:hover {
+  background-color: #f0f0f0;
+  color: black;
+}
+
+
+
+
+
