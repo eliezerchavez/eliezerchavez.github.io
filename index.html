@@ -12,7 +12,7 @@
   <style>
     :root {
       --max-logo: 76vmin;
-      --min-logo: 200px;
+      --min-logo: 220px;
       --btn-fg: #002E6D; /* default; updated per logo */
     }
 
@@ -36,7 +36,13 @@
     .wrapper {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: flex-end; /* default: align right */
+    }
+
+    @media (max-width: 600px) {
+      .wrapper {
+        align-items: center; /* on narrow screens: center buttons */
+      }
     }
 
     .logo-box {
