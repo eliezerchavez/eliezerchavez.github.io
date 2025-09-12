@@ -1,53 +1,265 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Welcome to Eli’s corner of the internet – Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm. No promises, but I might fix your mess.">
-    <meta name="keywords" content="Eliezer Chavez, Eli Chavez, Cloud Architect, DevOps Expert, Cybersecurity, AWS Champion, Solutions Architect, Digital Transformation, Infrastructure as Code, CI/CD Pipelines, Kubernetes, Cloud Computing, Cloud-Native Architectures, Disaster Recovery, Technology Leader, Problem Solver, Customer-Focused, Digital Innovator, Mentor, Team Leader, Biker, Tech Enthusiast, Utilities Cloud Solutions, Finance Cloud Architectures, Retail DevOps, IT Operations Expert, Automation Specialist, Sarcastic Humor, Passion for Innovation, Thought Leader, Outdoor Enthusiast">
-    <meta name="author" content="Eliezer (Eli) Chavez">
-    <title>eliezerchavez</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>&gt;EC</title>
 
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Person",
-          "name": "Eliezer (Eli) Chavez",
-          "jobTitle": "Cybersecurity & DevOps Team Lead • Cloud/Solutions Architect",
-          "description": "Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm.",
-          "url": "https://eliezerchavez.com",
-          "sameAs": [
-            "https://www.linkedin.com/in/eliezerchavez/",
-            "https://instagram.com/eliezerchavez",
-            "https://github.com/eliezerchavez"
-          ],
-          "worksFor": {
-            "@type": "Organization",
-            "name": "NTT DATA"
-          },
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Milford",
-            "addressRegion": "Connecticut",
-            "addressCountry": "USA"
-          },
-          "alumniOf": {
-            "@type": "EducationalOrganization",
-            "name": "Universidad 'Alejandro de Humboldt'"
-          }
-        }
-        </script>
+  <!-- Font Awesome (standard) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --max-logo: 76vmin;
+      --min-logo: 160px;
+      --btn-fg: #002E6D;
+      /* default; updated per logo */
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color .25s ease;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .logo-box {
+      width: clamp(var(--min-logo), 40vw, var(--max-logo));
+      max-height: 80vh;
+      aspect-ratio: 3 / 1.2;
+      display: grid;
+      place-items: center;
+    }
+
+    #logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+      user-select: none;
+      transition: opacity .18s ease;
+      opacity: 1;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    .fade-in {
+      opacity: 1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      /* spacing under the logo */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    .actions.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      /* 1:1 square */
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--btn-fg);
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
+      transition: transform .15s ease, box-shadow .2s ease;
+      outline: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--btn-fg);
+      outline-offset: 3px;
+    }
+
+    .btn i {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <img src="logo.webp" alt="eliezerchavez" class="logo">
-        <button class="contact-btn" onclick="contactMe()">Contact</button>
+  <div class="wrapper">
+    <div class="logo-box">
+      <!-- 1x1 transparent to avoid alt flash -->
+      <img id="logo" alt=">EC" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" />
     </div>
-    <script src="script.js"></script>
+    <nav class="actions" id="actions" aria-label="Quick contact">
+      <a class="btn" href="mailto:hi@eliezerchavez.com" aria-label="Email (No form. No tracking. Just drop a line.)"
+        title="Email • No form. No tracking. Just drop a line.">
+        <i class="fa-solid fa-envelope"></i>
+      </a>
+
+      <a class="btn" href="https://www.linkedin.com/in/eliezerchavez/" target="_blank" rel="noopener"
+        aria-label="LinkedIn (Opens in a new tab. No form. No tracking. Just drop a line.)"
+        title="LinkedIn • Opens in a new tab.">
+        <i class="fa-brands fa-linkedin-in"></i>
+      </a>
+
+      <a class="btn" href="https://github.com/eliezerchavez" target="_blank" rel="noopener"
+        aria-label="GitHub (Opens in a new tab. No form. No tracking. Just drop a line.)"
+        title="GitHub • Opens in a new tab.">
+        <i class="fa-brands fa-github"></i>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    const IMG = {
+      "COL-01": { logo: { src: "img/col-01.svg", bg: "#FFFFFF" }, button: { fg: "#002E6D" } },
+      "COL-02": { logo: { src: "img/col-02.svg", bg: "#002E6D" }, button: { fg: "#002E6D" } },
+      "GRS-01": { logo: { src: "img/grs-01.svg", bg: "#FFFFFF" }, button: { fg: "#1D252C" } },
+      "GRS-02": { logo: { src: "img/grs-02.svg", bg: "#1D252C" }, button: { fg: "#1D252C" } },
+      "NEG-01": { logo: { src: "img/neg-01.svg", bg: "#1D252C" }, button: { fg: "#1D252C" } },
+      "OUT-01": { logo: { src: "img/out-01.svg", bg: "#FFFFFF" }, button: { fg: "#1D252C" } },
+      "POS-01": { logo: { src: "img/pos-01.svg", bg: "#FFFFFF" }, button: { fg: "#002E6D" } },
+      "POS-02": { logo: { src: "img/pos-02.svg", bg: "#FFFFFF" }, button: { fg: "#00C4B3" } }
+    };
+
+    // ---- Controls ----
+    const fastCycles = 3;        // full rotations through all logos
+    const fastStepDelay = 120;      // ms between fast swaps
+    const TARGET_MS = 7000;     // total showcase time
+    const FINAL_PAUSE_MS = 500;      // pause before buttons reveal
+    const persistSession = false;    // toggle to true to fix for the session
+
+    // Optional fixed final logo (e.g., "COL-02"); set to null for random
+    const FINAL_OVERRIDE = null;
+
+    // ---- Internals ----
+    const SESSION_KEY = 'ecLogoFinal';
+    const imgEl = document.getElementById('logo');
+    const actEl = document.getElementById('actions');
+    const codes = Object.keys(IMG);
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function show(code) {
+      const item = IMG[code];
+      if (!item) return;
+      document.body.style.backgroundColor = item.logo.bg;
+      document.documentElement.style.setProperty('--btn-fg', item.button.fg || '#002E6D');
+      imgEl.classList.remove('fade-in');
+      imgEl.classList.add('fade-out');
+      setTimeout(() => {
+        imgEl.src = item.logo.src;
+        imgEl.classList.remove('fade-out');
+        imgEl.classList.add('fade-in');
+      }, 80);
+    }
+
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+    (function runShowcase() {
+      // Session persistence (optional)
+      if (persistSession) {
+        const saved = sessionStorage.getItem(SESSION_KEY);
+        if (saved && IMG[saved]) {
+          show(saved);
+          actEl.classList.add('show');
+          return;
+        }
+      }
+
+      const order = shuffle(codes);
+      const timeFast = fastCycles * order.length * fastStepDelay;
+
+      // Decide final logo: override → random
+      const pickRandom = () => codes[Math.floor(Math.random() * codes.length)];
+      const FINAL_CODE = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickRandom();
+
+      // Build slow phase to fill to ~TARGET_MS
+      const slowSteps = 6; // feels snappy with your current fast pass
+      const weights = [];
+      for (let s = 0; s < slowSteps; s++) {
+        const t = slowSteps > 1 ? s / (slowSteps - 1) : 1;
+        weights.push(1 + easeOutCubic(t));
+      }
+      const sumW = weights.reduce((a, b) => a + b, 0);
+      const remainingForSlow = Math.max(0, TARGET_MS - timeFast - FINAL_PAUSE_MS);
+      const slowDelays = weights.map(w => (remainingForSlow * w) / sumW);
+
+      let step = 0, idx = 0;
+
+      function phaseFast(next) {
+        if (step >= fastCycles * order.length) { next(); return; }
+        show(order[idx % order.length]);
+        idx++; step++;
+        setTimeout(() => phaseFast(next), fastStepDelay);
+      }
+
+      function phaseSlow(done) {
+        let s = 0;
+        function tick() {
+          if (s >= slowDelays.length) { done(); return; }
+          show(pickRandom());
+          setTimeout(() => { s++; tick(); }, slowDelays[s]);
+        }
+        tick();
+      }
+
+      function phaseStop() {
+        show(FINAL_CODE);
+        if (persistSession) sessionStorage.setItem(SESSION_KEY, FINAL_CODE);
+        setTimeout(() => actEl.classList.add('show'), FINAL_PAUSE_MS);
+      }
+
+      phaseFast(() => phaseSlow(phaseStop));
+    })();
+  </script>
 </body>
 
 </html>
