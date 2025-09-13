@@ -2,83 +2,61 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Eliezer (Eli) Chavez</title>
-  <meta name="description"
-    content="Eli’s corner of the cloud: Architect, DevOps wrangler, and overthinker on fast bikes. Credentials included. Sarcasm free of charge.">
-  <meta name="keywords"
-    content="Eliezer Chavez, Eli Chavez, Cloud Architect, DevOps Strategist, Cybersecurity, AWS Solutions Architect, Azure Cloud, Google Cloud, Digital Transformation, Infrastructure as Code, CI/CD Automation, Kubernetes Architect, Cloud-Native Solutions, Disaster Recovery, Multi-Cloud Architectures, Technology Leader, IT Problem Solver, Automation Specialist, Customer-Centric, Digital Innovator, Mentor, Team Builder, Cloud Governance, Utilities Cloud Solutions, Finance Cloud Architectures, Retail Cloud DevOps, IT Operations, Observability, Thought Leadership, Fast Bikes, Kawasaki Versys 1100, Kawasaki ZX10R, Motorcycle Enthusiast">
-  <meta name="author" content="Eliezer (Eli) Chavez">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
+  <title>Eliezer (Eli) Chavez</title>
+  <meta name="description" content="Cloud Architect & DevOps wrangler. Credentials included. Sarcasm free of charge.">
+
+  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Eliezer (Eli) Chavez">
   <meta property="og:description"
-    content="Eli’s corner of the cloud: Architect, DevOps wrangler, and overthinker on fast bikes. Credentials included. Sarcasm free of charge.">
-  <meta property="og:image" content="/img/og-preview.png">
-  <meta name="twitter:card" content="summary">
+    content="Cloud Architect & DevOps wrangler. Credentials included. Sarcasm free of charge.">
+  <meta property="og:image" content="https://eliezerchavez.com/img/og-preview.png"> <!-- absolute URL recommended -->
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Eliezer (Eli) Chavez">
   <meta name="twitter:description"
-    content="Eli’s corner of the cloud: Architect, DevOps wrangler, and overthinker on fast bikes. Credentials included. Sarcasm free of charge.">
-  <meta name="twitter:image" content="/img/og-preview.png">
+    content="Cloud Architect & DevOps wrangler. Credentials included. Sarcasm free of charge.">
+  <meta name="twitter:image" content="https://eliezerchavez.com/img/og-preview.png"> <!-- can reuse OG -->
 
+  <!-- Chrome/Safari UI color -->
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#002E6D">
 
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Eliezer (Eli) Chavez",
-      "jobTitle": "Cybersecurity & DevOps Team Lead • Cloud/Solutions Architect",
-      "description": "Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm.",
-      "url": "https://eliezerchavez.com",
-      "sameAs": [
-        "https://www.linkedin.com/in/eliezerchavez/",
-        "https://instagram.com/eliezerchavez",
-        "https://github.com/eliezerchavez"
-      ],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "NTT DATA"
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Milford",
-        "addressRegion": "Connecticut",
-        "addressCountry": "USA"
-      },
-      "alumniOf": {
-        "@type": "EducationalOrganization",
-        "name": "Universidad 'Alejandro de Humboldt'"
-      }
-    }
-  </script>
-
   <!-- Favicons -->
-  <link rel="icon" type="image/png" href="/img/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
-  <link rel="shortcut icon" href="/img/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content=">EC" />
-  <link rel="manifest" href="/img/site.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="icon" type="image/png" href="/img/favicon-96x96.png" sizes="96x96">
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="manifest" href="/img/site.webmanifest">
 
+  <!-- Canonical & robots -->
   <link rel="canonical" href="https://eliezerchavez.com/">
   <meta name="robots" content="index, follow">
 
-  <!-- Font Awesome (standard) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Eliezer (Eli) Chavez",
+    "url": "https://eliezerchavez.com",
+    "sameAs": [
+      "https://www.linkedin.com/in/eliezerchavez/",
+      "https://github.com/eliezerchavez",
+      "https://instagram.com/eliezerchavez"
+    ]
+  }
+  </script>
+
+  <!-- Font Awesome (icons) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet" />
 
   <style>
     :root {
-      --max-logo: 76vmin;
-      --min-logo: 220px;
       --btn-fg: #002E6D;
-      /* default; updated per logo */
-    }
-
-    * {
-      box-sizing: border-box;
     }
 
     html,
@@ -91,29 +69,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color .25s ease;
+      transition: background-color .2s ease;
     }
 
     .wrapper {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      /* default: align right */
     }
 
     @media (max-width: 600px) {
       .wrapper {
         align-items: center;
-        /* on narrow screens: center buttons */
       }
     }
 
     .logo-box {
-      width: clamp(var(--min-logo), 40vw, var(--max-logo));
+      width: clamp(220px, 40vw, 76vmin);
       max-height: 80vh;
       aspect-ratio: 3 / 1.2;
       display: grid;
       place-items: center;
+      position: relative;
     }
 
     #logo {
@@ -122,7 +99,7 @@
       object-fit: contain;
       -webkit-user-drag: none;
       user-select: none;
-      transition: opacity .18s ease;
+      transition: opacity .18s ease, transform .18s ease;
       opacity: 1;
     }
 
@@ -137,11 +114,10 @@
     .actions {
       display: flex;
       gap: 10px;
-      margin-top: 30px;
-      /* spacing under the logo */
+      margin-top: 20px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .25s ease;
+      transition: opacity .2s ease;
     }
 
     .actions.show {
@@ -155,23 +131,11 @@
       justify-content: center;
       width: 44px;
       height: 44px;
-      /* 1:1 square */
       border-radius: 10px;
-      background: #ffffff;
+      background: #fff;
       color: var(--btn-fg);
       text-decoration: none;
       box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
-      transition: transform .15s ease, box-shadow .2s ease;
-      outline: none;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
-    }
-
-    .btn:active {
-      transform: translateY(0);
     }
 
     .btn:focus-visible {
@@ -195,30 +159,30 @@
 <body>
   <div class="wrapper">
     <div class="logo-box">
-      <!-- 1x1 transparent to avoid alt flash -->
       <img id="logo" alt=">EC" decoding="async" fetchpriority="high"
         src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" />
     </div>
+
     <nav class="actions" id="actions" aria-label="Quick contact">
       <a class="btn" href="mailto:hi@eliezerchavez.com" aria-label="Email (No form. No tracking. Just drop a line.)"
         title="Email • No form. No tracking. Just drop a line.">
         <i class="fa-solid fa-envelope"></i>
       </a>
-
       <a class="btn" href="https://www.linkedin.com/in/eliezerchavez/" target="_blank" rel="noopener"
         aria-label="LinkedIn (Opens in a new tab.)" title="LinkedIn • Opens in a new tab.">
         <i class="fa-brands fa-linkedin-in"></i>
       </a>
-
-      <!-- <a class="btn" href="https://github.com/eliezerchavez" target="_blank" rel="noopener"
-        aria-label="GitHub (Opens in a new tab.)" title="GitHub • Opens in a new tab.">
+      <!-- Add GitHub back any time
+      <a class="btn" href="https://github.com/eliezerchavez" target="_blank" rel="noopener"
+         aria-label="GitHub (Opens in a new tab.)" title="GitHub • Opens in a new tab.">
         <i class="fa-brands fa-github"></i>
-      </a> -->
+      </a>
+      -->
     </nav>
   </div>
 
   <script>
-    // ====== Logo variants (your map) ======
+    // ========= CONFIG =========
     const IMG = {
       "COL-01": { logo: { src: "img/col-01.svg", bg: "#FFFFFF" }, button: { fg: "#002E6D" } },
       "COL-02": { logo: { src: "img/col-02.svg", bg: "#002E6D" }, button: { fg: "#002E6D" } },
@@ -230,65 +194,62 @@
       "POS-02": { logo: { src: "img/pos-02.svg", bg: "#FFFFFF" }, button: { fg: "#00C4B3" } }
     };
 
-    // ====== Controls ======
-    const TARGET_MS = 3000;  // total runtime
-    const STEP_DELAY_MS = 100;    // constant speed between swaps
-    const FINAL_PAUSE_MS = 500;   // tiny breather before buttons show
-    const persistSession = false; // set true to keep same final during the session
-    const FINAL_OVERRIDE = null;  // e.g. "COL-02" to force a final, else random
-    const SHOW_TIMER = false;  // <-- toggle elapsed-time counter on/off
+    // Showcase controls
+    const TARGET_MS = 5000;       // total shuffle duration
+    const FRAME_MS = 100;         // min time each logo stays visible
+    const FINAL_PAUSE_MS = 750;   // pause before revealing buttons
+    const FINAL_BLANK_MS = 1250;  // blank hold before final entrance
+    const FINAL_SLIDE_PX = 50;    // starting offset from the left for final
+    const FINAL_FADE_MS = 500;    // final slide/fade duration
+    const FINAL_WIPE_MS = 1250;   // duration of the wipe animation
+    const persistSession = false; // if true, remembers final logo for session
+    const FINAL_OVERRIDE = null;  // e.g., "COL-02" to force final
+    const SHOW_TIMER = false;     // shows elapsed + tiny toast when true
 
-    // ====== Internals ======
-    const SESSION_KEY = 'ecLogoFinal';
+    // ========= STATE / DOM =========
+    const SESSION_KEY = 'ecLogoShowcase';
+    const codes = Object.keys(IMG);
     const imgEl = document.getElementById('logo');
     const actEl = document.getElementById('actions');
-    const codes = Object.keys(IMG);
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Debug counter
-    let timerEl;
+    let lastShown = null;
+    let currentRunToken = 0; // increments to cancel prior runs
+
+    // Debug timer + toast (only if SHOW_TIMER)
+    let timerEl = null;
+    let toastEl = null;
     if (SHOW_TIMER) {
       timerEl = document.createElement('div');
-      timerEl.style.position = 'fixed';
-      timerEl.style.bottom = '10px';
-      timerEl.style.left = '10px';
-      timerEl.style.font = '12px monospace';
-      timerEl.style.color = '#fff';
-      timerEl.style.background = 'rgba(0,0,0,0.5)';
-      timerEl.style.padding = '4px 6px';
-      timerEl.style.borderRadius = '4px';
-      timerEl.style.zIndex = '9999';
+      Object.assign(timerEl.style, {
+        position: 'fixed', bottom: '10px', left: '10px',
+        font: '12px/1 monospace', color: '#fff',
+        background: 'rgba(0,0,0,0.55)', padding: '4px 6px',
+        borderRadius: '4px', zIndex: '9999', pointerEvents: 'none'
+      });
       document.body.appendChild(timerEl);
+
+      toastEl = document.createElement('div');
+      Object.assign(toastEl.style, {
+        position: 'fixed', bottom: '34px', left: '10px',
+        font: '12px/1 monospace', color: '#fff',
+        background: 'rgba(0,0,0,0.7)', padding: '4px 6px',
+        borderRadius: '4px', zIndex: '9999', opacity: '0',
+        transition: 'opacity .18s ease', pointerEvents: 'none'
+      });
+      document.body.appendChild(toastEl);
     }
 
-    // Non-repeating random picker
-    function makePicker(list) {
-      let last = null;
-      return () => {
-        let code;
-        do { code = list[Math.floor(Math.random() * list.length)]; } while (code === last && list.length > 1);
-        last = code;
-        return code;
-      };
-    }
-    const pickRandom = makePicker(codes);
+    // ========= UTILS =========
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 
-    // Quick preload of all SVGs (don’t block >250ms)
-    function preloadAll() {
-      const promises = codes.map(c => new Promise(resolve => {
-        const src = IMG[c]?.logo?.src; if (!src) return resolve();
-        const link = document.createElement('link');
-        link.rel = 'preload'; link.as = 'image'; link.href = src;
-        link.onload = link.onerror = resolve;
-        document.head.appendChild(link);
-      }));
-      return Promise.race([Promise.all(promises), new Promise(res => setTimeout(res, 250))]);
+    function showToast(msg, ms = 800) {
+      if (!SHOW_TIMER || !toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.style.opacity = '1';
+      setTimeout(() => { toastEl && (toastEl.style.opacity = '0'); }, ms);
     }
 
-    // Track what was shown last
-    let lastShown = null;
-
-    // Pick a random code that's NOT the one we just showed
     function pickDifferent() {
       if (codes.length <= 1) return codes[0];
       let code;
@@ -297,71 +258,205 @@
       return code;
     }
 
-    // Show helper (fade only when requested)
-    function show(code, { fade = false } = {}) {
+    // Preload images quickly (don’t block >250ms)
+    function preloadAll() {
+      const promises = codes.map(c => new Promise(resolve => {
+        const src = IMG[c]?.logo?.src; if (!src) return resolve();
+        const link = document.createElement('link');
+        link.rel = 'preload'; link.as = 'image'; link.href = src;
+        link.onload = link.onerror = resolve;
+        document.head.appendChild(link);
+      }));
+      return Promise.race([Promise.all(promises), sleep(250)]);
+    }
+
+    function applyTheme(code) {
       const item = IMG[code]; if (!item) return;
       document.body.style.backgroundColor = item.logo.bg || '#FFFFFF';
       document.documentElement.style.setProperty('--btn-fg', (item.button && item.button.fg) || '#002E6D');
-
-      if (!fade) { imgEl.src = item.logo.src || imgEl.src; lastShown = code; return; }
-
-      imgEl.classList.remove('fade-in');
-      imgEl.classList.add('fade-out');
-      setTimeout(() => {
-        imgEl.src = item.logo.src || imgEl.src;
-        imgEl.classList.remove('fade-out');
-        imgEl.classList.add('fade-in');
-        lastShown = code;
-      }, 80);
     }
 
-    function runShowcase() {
+    // Instant swap for shuffle frames
+    async function showInstant(code) {
+      const item = IMG[code]; if (!item) return;
+      applyTheme(code);
+      const nextSrc = item.logo.src || imgEl.src;
+      if (nextSrc === imgEl.src) { lastShown = code; return; }
+      imgEl.src = nextSrc;
+      try { await imgEl.decode(); } catch { }
+      lastShown = code;
+    }
+
+    // One clean fade for non-finale cases
+    async function showFade(code) {
+      const item = IMG[code]; if (!item) return;
+      applyTheme(code);
+      imgEl.classList.remove('fade-in');
+      imgEl.classList.add('fade-out');
+      await sleep(80);
+      const nextSrc = item.logo.src || imgEl.src;
+      imgEl.src = nextSrc;
+      try { await imgEl.decode(); } catch { }
+      imgEl.classList.remove('fade-out');
+      imgEl.classList.add('fade-in');
+      lastShown = code;
+    }
+
+    // PowerPoint-style "Wipe from Left" without a curtain
+    async function showFinalEntrance(code) {
+      const item = IMG[code]; if (!item) return;
+
+      // 0) Clean up any previous animation styles/classes
+      imgEl.classList.remove('fade-in', 'fade-out');
+      imgEl.style.transition = '';
+      imgEl.style.opacity = '1';
+      imgEl.style.transform = 'none';
+      imgEl.style.clipPath = '';
+      imgEl.style.webkitClipPath = '';
+      imgEl.style.willChange = '';
+
+      // 1) Set the final theme (bg + button fg)
+      applyTheme(code);
+
+      // 2) Go truly blank (logo hidden), then hold
+      imgEl.style.opacity = '0';  // hide the logo completely
+      await sleep(FINAL_BLANK_MS); // <- your blank pause
+
+      // 3) Ensure the final image is loaded/decoded while hidden
+      const nextSrc = item.logo.src || imgEl.src;
+      if (nextSrc !== imgEl.src) imgEl.src = nextSrc;
+      try { await imgEl.decode(); } catch { }
+
+      // 4) If clip-path is supported, do a real wipe; otherwise, fall back to fade
+      const canClip = CSS && (CSS.supports('clip-path', 'inset(0 0 0 0)') || CSS.supports('-webkit-clip-path', 'inset(0 0 0 0)'));
+      if (!canClip) {
+        // Fallback: simple fade in
+        imgEl.style.opacity = '0';
+        // tiny tick so the opacity=0 "sticks" before we transition
+        await new Promise(r => requestAnimationFrame(r));
+        imgEl.style.transition = `opacity ${FINAL_FADE_MS}ms ease`;
+        imgEl.style.opacity = '1';
+        lastShown = code;
+        return;
+      }
+
+      // 5) Prep for wipe: make the logo visible but fully clipped
+      //    (left→right reveal: start with right side fully clipped = 100%)
+      imgEl.style.willChange = 'clip-path';
+      imgEl.style.opacity = '1'; // logo becomes visible but fully clipped → appears blank
+      imgEl.style.clipPath = 'inset(0 100% 0 0)';
+      imgEl.style.webkitClipPath = 'inset(0 100% 0 0)';
+
+      // Force reflow so the starting clip is registered
+      void imgEl.getBoundingClientRect();
+
+      // 6) Animate the wipe: unclipping from the right side to 0%
+      //    This reveals the image progressively from left → right.
+      await new Promise(r => requestAnimationFrame(r));
+      imgEl.style.transition = `clip-path ${FINAL_WIPE_MS}ms ease, -webkit-clip-path ${FINAL_WIPE_MS}ms ease`;
+      imgEl.style.clipPath = 'inset(0 0 0 0)';
+      imgEl.style.webkitClipPath = 'inset(0 0 0 0)';
+
+      // 7) Wait for the wipe to complete, then clean up
+      await sleep(FINAL_WIPE_MS + 20);
+      imgEl.style.transition = '';
+      imgEl.style.willChange = '';
+      lastShown = code;
+    }
+
+    function resetUIBeforeRun() {
+      actEl.classList.remove('show');
+      imgEl.style.transition = '';           // clear custom transition
+      imgEl.style.opacity = '1';
+      imgEl.style.transform = 'translateX(0)';
+      lastShown = null;
+    }
+
+    function replayShowcase() {
+      showToast('Replaying…', 700);
+      currentRunToken++;           // cancel any current run
+      resetUIBeforeRun();
+      preloadAll().then(runShowcase);
+    }
+
+    // ========= SHOWCASE =========
+    async function runShowcase() {
+      const myToken = ++currentRunToken; // claim this run
+
       // Session stickiness
       if (persistSession) {
         const saved = sessionStorage.getItem(SESSION_KEY);
         if (saved && IMG[saved]) {
-          show(saved, { fade: true });
+          if (myToken !== currentRunToken) return;
+          await showFade(saved);
+          if (myToken !== currentRunToken) return;
           actEl.classList.add('show');
           return;
         }
       }
 
-      // Reduced motion → pick one and show
+      // Reduced motion
       if (prefersReduced) {
-        const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickRandom();
-        show(finalCode, { fade: true });
+        const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickDifferent();
+        if (myToken !== currentRunToken) return;
+        await showFade(finalCode);
+        if (myToken !== currentRunToken) return;
         actEl.classList.add('show');
         return;
       }
 
-      // Compute steps
-      const steps = Math.max(1, Math.floor((TARGET_MS - FINAL_PAUSE_MS) / STEP_DELAY_MS));
-      const FINAL_CODE = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickDifferent();
+      const start = performance.now();
+      let now = start;
 
-      const startTime = Date.now();
-      let i = 0;
+      while (now - start < TARGET_MS - FINAL_PAUSE_MS) {
+        if (myToken !== currentRunToken) return; // aborted mid-loop
 
-      function tick() {
         if (SHOW_TIMER && timerEl) {
-          timerEl.textContent = `Elapsed: ${(Date.now() - startTime)} ms`;
+          const s = ((now - start) / 1000).toFixed(1);
+          timerEl.textContent = `Elapsed: ${s}s`;
         }
 
-        if (i >= steps) {
-          const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickDifferent();
-          show(FINAL_CODE, { fade: true });
-          if (persistSession) sessionStorage.setItem(SESSION_KEY, FINAL_CODE);
-          setTimeout(() => actEl.classList.add('show'), Math.max(0, FINAL_PAUSE_MS));
-          return;
-        }
-        show(pickDifferent(), { fade: false });
-        i++;
-        setTimeout(tick, STEP_DELAY_MS);
+        const code = pickDifferent();
+        const frameStart = performance.now();
+        await showInstant(code);
+        if (myToken !== currentRunToken) return; // aborted after frame
+
+        const elapsed = performance.now() - frameStart;
+        const remaining = Math.max(0, FRAME_MS - elapsed);
+        if (remaining > 0) await sleep(remaining);
+
+        now = performance.now();
       }
 
-      tick();
+      // Final (different from lastShown unless overridden)
+      const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickDifferent();
+      if (myToken !== currentRunToken) return;
+
+      if (prefersReduced) {
+        await showFade(finalCode);
+      } else {
+        await showFinalEntrance(finalCode);
+      }
+      if (myToken !== currentRunToken) return;
+
+      if (persistSession) sessionStorage.setItem(SESSION_KEY, finalCode);
+      await sleep(Math.max(0, FINAL_PAUSE_MS));
+      if (myToken !== currentRunToken) return;
+
+      actEl.classList.add('show');
     }
 
-    // Preload briefly, then go
+    // ========= INTERACTION =========
+    // Keyboard: press "R" to replay
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'r' || e.key === 'R') replayShowcase();
+    });
+
+    // Click the logo to replay
+    imgEl.style.cursor = 'pointer';
+    imgEl.addEventListener('click', replayShowcase);
+
+    // ========= BOOT =========
     preloadAll().then(runShowcase);
   </script>
 
