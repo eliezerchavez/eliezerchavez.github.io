@@ -232,7 +232,7 @@
 
     // ====== Controls ======
     const TARGET_MS = 5000;  // total runtime (~5s)
-    const STEP_DELAY_MS = 85;    // constant speed between swaps
+    const STEP_DELAY_MS = 150;    // constant speed between swaps
     const FINAL_PAUSE_MS = 300;   // tiny breather before buttons show
     const persistSession = false; // set true to keep same final during the session
     const FINAL_OVERRIDE = null;  // e.g. "COL-02" to force a final, else random
@@ -285,13 +285,25 @@
       return Promise.race([Promise.all(promises), new Promise(res => setTimeout(res, 250))]);
     }
 
+    // Track what was shown last
+    let lastShown = null;
+
+    // Pick a random code that's NOT the one we just showed
+    function pickDifferent() {
+      if (codes.length <= 1) return codes[0];
+      let code;
+      do { code = codes[Math.floor(Math.random() * codes.length)]; }
+      while (code === lastShown);
+      return code;
+    }
+
     // Show helper (fade only when requested)
     function show(code, { fade = false } = {}) {
       const item = IMG[code]; if (!item) return;
       document.body.style.backgroundColor = item.logo.bg || '#FFFFFF';
       document.documentElement.style.setProperty('--btn-fg', (item.button && item.button.fg) || '#002E6D');
 
-      if (!fade) { imgEl.src = item.logo.src || imgEl.src; return; }
+      if (!fade) { imgEl.src = item.logo.src || imgEl.src; lastShown = code; return; }
 
       imgEl.classList.remove('fade-in');
       imgEl.classList.add('fade-out');
@@ -299,6 +311,7 @@
         imgEl.src = item.logo.src || imgEl.src;
         imgEl.classList.remove('fade-out');
         imgEl.classList.add('fade-in');
+        lastShown = code;
       }, 80);
     }
 
@@ -323,7 +336,7 @@
 
       // Compute steps
       const steps = Math.max(1, Math.floor((TARGET_MS - FINAL_PAUSE_MS) / STEP_DELAY_MS));
-      const FINAL_CODE = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickRandom();
+      const FINAL_CODE = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickDifferent();
 
       const startTime = Date.now();
       let i = 0;
@@ -334,12 +347,13 @@
         }
 
         if (i >= steps) {
+          const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickDifferent();
           show(FINAL_CODE, { fade: true });
           if (persistSession) sessionStorage.setItem(SESSION_KEY, FINAL_CODE);
           setTimeout(() => actEl.classList.add('show'), Math.max(0, FINAL_PAUSE_MS));
           return;
         }
-        show(pickRandom(), { fade: false });
+        show(pickDifferent(), { fade: false });
         i++;
         setTimeout(tick, STEP_DELAY_MS);
       }
