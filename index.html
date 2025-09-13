@@ -4,22 +4,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>&gt;EC</title>
+  <title>Eliezer (Eli) Chavez</title>
   <meta name="description"
-    content="Welcome to Eli’s corner of the internet – Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm. No promises, but I might fix your mess.">
+    content="Eli’s corner of the cloud: Architect, DevOps wrangler, and overthinker on fast bikes. Credentials included. Sarcasm free of charge.">
   <meta name="keywords"
-    content="Eliezer Chavez, Eli Chavez, Cloud Architect, DevOps Expert, Cybersecurity, AWS Champion, Solutions Architect, Digital Transformation, Infrastructure as Code, CI/CD Pipelines, Kubernetes, Cloud Computing, Cloud-Native Architectures, Disaster Recovery, Technology Leader, Problem Solver, Customer-Focused, Digital Innovator, Mentor, Team Leader, Biker, Tech Enthusiast, Utilities Cloud Solutions, Finance Cloud Architectures, Retail DevOps, IT Operations Expert, Automation Specialist, Sarcastic Humor, Passion for Innovation, Thought Leader, Outdoor Enthusiast">
+    content="Eliezer Chavez, Eli Chavez, Cloud Architect, DevOps Strategist, Cybersecurity, AWS Solutions Architect, Azure Cloud, Google Cloud, Digital Transformation, Infrastructure as Code, CI/CD Automation, Kubernetes Architect, Cloud-Native Solutions, Disaster Recovery, Multi-Cloud Architectures, Technology Leader, IT Problem Solver, Automation Specialist, Customer-Centric, Digital Innovator, Mentor, Team Builder, Cloud Governance, Utilities Cloud Solutions, Finance Cloud Architectures, Retail Cloud DevOps, IT Operations, Observability, Thought Leadership, Fast Bikes, Kawasaki Versys 1100, Kawasaki ZX10R, Motorcycle Enthusiast">
   <meta name="author" content="Eliezer (Eli) Chavez">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content=">EC">
+  <meta property="og:title" content="Eliezer (Eli) Chavez">
   <meta property="og:description"
-    content="Welcome to Eli’s corner of the internet – Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm. No promises, but I might fix your mess.">
-  <meta property="og:image" content="">
+    content="Eli’s corner of the cloud: Architect, DevOps wrangler, and overthinker on fast bikes. Credentials included. Sarcasm free of charge.">
+  <meta property="og:image" content="/img/og-preview.png">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content=">EC">
+  <meta name="twitter:title" content="Eliezer (Eli) Chavez">
   <meta name="twitter:description"
-    content="Welcome to Eli’s corner of the internet – Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm. No promises, but I might fix your mess.">
+    content="Eli’s corner of the cloud: Architect, DevOps wrangler, and overthinker on fast bikes. Credentials included. Sarcasm free of charge.">
+  <meta name="twitter:image" content="/img/og-preview.png">
 
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#002E6D">
@@ -55,12 +56,12 @@
   </script>
 
   <!-- Favicons -->
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> <!-- Modern scalable -->
-  <link rel="shortcut icon" href="/favicon.ico" /> <!-- Legacy .ico -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="/img/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
+  <link rel="shortcut icon" href="/img/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content=">EC" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="manifest" href="/img/site.webmanifest" />
 
   <link rel="canonical" href="https://eliezerchavez.com/">
   <meta name="robots" content="index, follow">
@@ -217,6 +218,7 @@
   </div>
 
   <script>
+    // ====== Logo variants (your map) ======
     const IMG = {
       "COL-01": { logo: { src: "img/col-01.svg", bg: "#FFFFFF" }, button: { fg: "#002E6D" } },
       "COL-02": { logo: { src: "img/col-02.svg", bg: "#002E6D" }, button: { fg: "#002E6D" } },
@@ -228,41 +230,68 @@
       "POS-02": { logo: { src: "img/pos-02.svg", bg: "#FFFFFF" }, button: { fg: "#00C4B3" } }
     };
 
-    // ---- Controls ----
-    const fastCycles = 3;           // full rotations
-    const fastStepDelay = 110;      // ms between fast swaps
-    const TARGET_MS = 7000;         // total runtime target
-    const FINAL_PAUSE_MS = 300;     // short breather before buttons
-    const persistSession = false;   // set true to stick in session
-    const FINAL_OVERRIDE = null;    // e.g. "COL-02" to force
+    // ====== Controls ======
+    const TARGET_MS = 5000;  // total runtime (~5s)
+    const STEP_DELAY_MS = 85;    // constant speed between swaps
+    const FINAL_PAUSE_MS = 300;   // tiny breather before buttons show
+    const persistSession = false; // set true to keep same final during the session
+    const FINAL_OVERRIDE = null;  // e.g. "COL-02" to force a final, else random
+    const SHOW_TIMER = false;  // <-- toggle elapsed-time counter on/off
 
-    // ---- Internals ----
+    // ====== Internals ======
     const SESSION_KEY = 'ecLogoFinal';
     const imgEl = document.getElementById('logo');
     const actEl = document.getElementById('actions');
     const codes = Object.keys(IMG);
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function shuffle(arr) {
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
+    // Debug counter
+    let timerEl;
+    if (SHOW_TIMER) {
+      timerEl = document.createElement('div');
+      timerEl.style.position = 'fixed';
+      timerEl.style.bottom = '10px';
+      timerEl.style.left = '10px';
+      timerEl.style.font = '12px monospace';
+      timerEl.style.color = '#fff';
+      timerEl.style.background = 'rgba(0,0,0,0.5)';
+      timerEl.style.padding = '4px 6px';
+      timerEl.style.borderRadius = '4px';
+      timerEl.style.zIndex = '9999';
+      document.body.appendChild(timerEl);
     }
 
-    // Show with optional fade (only fade on the final settle)
-    function show(code, { fade = true } = {}) {
-      const item = IMG[code];
-      if (!item) return;
+    // Non-repeating random picker
+    function makePicker(list) {
+      let last = null;
+      return () => {
+        let code;
+        do { code = list[Math.floor(Math.random() * list.length)]; } while (code === last && list.length > 1);
+        last = code;
+        return code;
+      };
+    }
+    const pickRandom = makePicker(codes);
+
+    // Quick preload of all SVGs (don’t block >250ms)
+    function preloadAll() {
+      const promises = codes.map(c => new Promise(resolve => {
+        const src = IMG[c]?.logo?.src; if (!src) return resolve();
+        const link = document.createElement('link');
+        link.rel = 'preload'; link.as = 'image'; link.href = src;
+        link.onload = link.onerror = resolve;
+        document.head.appendChild(link);
+      }));
+      return Promise.race([Promise.all(promises), new Promise(res => setTimeout(res, 250))]);
+    }
+
+    // Show helper (fade only when requested)
+    function show(code, { fade = false } = {}) {
+      const item = IMG[code]; if (!item) return;
       document.body.style.backgroundColor = item.logo.bg || '#FFFFFF';
       document.documentElement.style.setProperty('--btn-fg', (item.button && item.button.fg) || '#002E6D');
 
-      if (!fade) { // instant swap (no class churn, no timeout)
-        imgEl.src = item.logo.src || imgEl.src;
-        return;
-      }
+      if (!fade) { imgEl.src = item.logo.src || imgEl.src; return; }
 
       imgEl.classList.remove('fade-in');
       imgEl.classList.add('fade-out');
@@ -273,39 +302,8 @@
       }, 80);
     }
 
-    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-
-    // Ensure we don't repeat the same code consecutively
-    function makePicker(list) {
-      let last = null;
-      return () => {
-        let code;
-        do { code = list[Math.floor(Math.random() * list.length)]; } while (code === last && list.length > 1);
-        last = code;
-        return code;
-      };
-    }
-
-    // Preload all SVGs (don’t block more than 300ms)
-    function preloadAll() {
-      const controllers = [];
-      const promises = codes.map(c => new Promise(resolve => {
-        const src = IMG[c]?.logo?.src;
-        if (!src) return resolve();
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = src;
-        link.onload = link.onerror = () => resolve();
-        document.head.appendChild(link);
-      }));
-      return Promise.race([
-        Promise.all(promises),
-        new Promise(res => setTimeout(res, 300))
-      ]);
-    }
-
     function runShowcase() {
+      // Session stickiness
       if (persistSession) {
         const saved = sessionStorage.getItem(SESSION_KEY);
         if (saved && IMG[saved]) {
@@ -315,62 +313,41 @@
         }
       }
 
+      // Reduced motion → pick one and show
       if (prefersReduced) {
-        const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE
-          : codes[Math.floor(Math.random() * codes.length)];
+        const finalCode = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickRandom();
         show(finalCode, { fade: true });
         actEl.classList.add('show');
         return;
       }
 
-      const order = shuffle(codes);
-      const timeFast = fastCycles * order.length * fastStepDelay;
-
-      const pickRandom = makePicker(codes);
+      // Compute steps
+      const steps = Math.max(1, Math.floor((TARGET_MS - FINAL_PAUSE_MS) / STEP_DELAY_MS));
       const FINAL_CODE = (FINAL_OVERRIDE && IMG[FINAL_OVERRIDE]) ? FINAL_OVERRIDE : pickRandom();
 
-      // Faster slow phase: fewer steps, gentler easing, instant swaps
-      const SLOW_STEPS = 3;
-      const WEIGHT_END = 1.2; // 1 → 1.25 instead of 1 → 1.5
+      const startTime = Date.now();
+      let i = 0;
 
-      const weights = [];
-      for (let s = 0; s < SLOW_STEPS; s++) {
-        const t = SLOW_STEPS > 1 ? s / (SLOW_STEPS - 1) : 1;
-        weights.push(1 + easeOutCubic(t) * (WEIGHT_END - 1));
-      }
-      const sumW = weights.reduce((a, b) => a + b, 0);
-      const slowTotal = Math.max(0, TARGET_MS - timeFast - FINAL_PAUSE_MS);
-      const slowDelays = weights.map(w => (slowTotal * w) / sumW);
-
-      let step = 0, idx = 0;
-
-      function phaseFast(next) {
-        if (step >= fastCycles * order.length) { next(); return; }
-        show(order[idx % order.length], { fade: false }); // fast = instant
-        idx++; step++;
-        setTimeout(() => phaseFast(next), fastStepDelay);
-      }
-
-      function phaseSlow(done) {
-        let s = 0;
-        function tick() {
-          if (s >= slowDelays.length) { done(); return; }
-          show(pickRandom(), { fade: false }); // instant = no lag feel
-          setTimeout(() => { s++; tick(); }, slowDelays[s]);
+      function tick() {
+        if (SHOW_TIMER && timerEl) {
+          timerEl.textContent = `Elapsed: ${(Date.now() - startTime)} ms`;
         }
-        tick();
+
+        if (i >= steps) {
+          show(FINAL_CODE, { fade: true });
+          if (persistSession) sessionStorage.setItem(SESSION_KEY, FINAL_CODE);
+          setTimeout(() => actEl.classList.add('show'), Math.max(0, FINAL_PAUSE_MS));
+          return;
+        }
+        show(pickRandom(), { fade: false });
+        i++;
+        setTimeout(tick, STEP_DELAY_MS);
       }
 
-      function phaseStop() {
-        show(FINAL_CODE, { fade: true }); // one nice fade at the end
-        if (persistSession) sessionStorage.setItem(SESSION_KEY, FINAL_CODE);
-        setTimeout(() => actEl.classList.add('show'), Math.max(0, FINAL_PAUSE_MS));
-      }
-
-      phaseFast(() => phaseSlow(phaseStop));
+      tick();
     }
 
-    // Preload a bit, then run
+    // Preload briefly, then go
     preloadAll().then(runShowcase);
   </script>
 
