@@ -6,20 +6,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
   <title>Eliezer (Eli) Chavez</title>
-  <meta name="description" content="Cloud Architect & DevOps wrangler. Credentials included. Sarcasm free of charge.">
+  <meta name="description"
+    content="Cloud & DevOps Leader specializing in Azure, AWS, and AI/ML strategy. Digital Transformation Architect helping enterprises design scalable, secure, and resilient platforms.">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Eliezer (Eli) Chavez">
+  <meta property="og:url" content="https://eliezerchavez.com/">
+  <meta property="og:site_name" content="Eliezer (Eli) Chavez">
   <meta property="og:description"
-    content="Cloud Architect & DevOps wrangler. Credentials included. Sarcasm free of charge.">
-  <meta property="og:image" content="https://eliezerchavez.com/img/og-preview.png"> <!-- absolute URL recommended -->
+    content="Cloud & DevOps Leader | AWS + Azure | AI/ML Strategist | Digital Transformation Architect">
+  <meta property="og:image" content="https://eliezerchavez.com/img/og-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Eliezer (Eli) Chavez">
   <meta name="twitter:description"
-    content="Cloud Architect & DevOps wrangler. Credentials included. Sarcasm free of charge.">
+    content="Cloud & DevOps Leader | AWS + Azure | AI/ML Strategist | Digital Transformation Architect">
   <meta name="twitter:image" content="https://eliezerchavez.com/img/og-preview.png"> <!-- can reuse OG -->
 
   <!-- Chrome/Safari UI color -->
@@ -43,16 +48,28 @@
     "@type": "Person",
     "name": "Eliezer (Eli) Chavez",
     "url": "https://eliezerchavez.com",
+    "jobTitle": "Cloud & DevOps Leader | AWS + Azure | AI/ML Strategist | Digital Transformation Architect",
     "sameAs": [
       "https://www.linkedin.com/in/eliezerchavez/",
       "https://github.com/eliezerchavez",
       "https://instagram.com/eliezerchavez"
-    ]
+    ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "NTT DATA Europe & Latam"
+    },
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "Universidad 'Alejandro de Humboldt'"
+    }
   }
   </script>
 
   <!-- Font Awesome (icons) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
 
   <style>
     :root {
@@ -100,14 +117,6 @@
       -webkit-user-drag: none;
       user-select: none;
       transition: opacity .18s ease, transform .18s ease;
-      opacity: 1;
-    }
-
-    .fade-out {
-      opacity: 0;
-    }
-
-    .fade-in {
       opacity: 1;
     }
 
@@ -198,11 +207,10 @@
     const params = new URLSearchParams(window.location.search);
 
     // Showcase controls
-    const TARGET_MS = 5000;       // total shuffle duration
+    const TARGET_MS = 4000;       // total shuffle duration
     const FRAME_MS = 100;         // min time each logo stays visible
     const FINAL_PAUSE_MS = 300;   // pause before revealing buttons
     const FINAL_BLANK_MS = 1250;  // blank hold before final entrance
-    const FINAL_SLIDE_PX = 50;    // starting offset from the left for final
     const FINAL_FADE_MS = 500;    // final slide/fade duration
     const FINAL_WIPE_MS = 1250;   // duration of the wipe animation
     const persistSession = false; // if true, remembers final logo for session
