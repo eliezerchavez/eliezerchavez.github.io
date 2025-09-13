@@ -194,6 +194,9 @@
       "POS-02": { logo: { src: "img/pos-02.svg", bg: "#FFFFFF" }, button: { fg: "#00C4B3" } }
     };
 
+    // Grab the query string from the current URL
+    const params = new URLSearchParams(window.location.search);
+
     // Showcase controls
     const TARGET_MS = 5000;       // total shuffle duration
     const FRAME_MS = 100;         // min time each logo stays visible
@@ -203,8 +206,8 @@
     const FINAL_FADE_MS = 500;    // final slide/fade duration
     const FINAL_WIPE_MS = 1250;   // duration of the wipe animation
     const persistSession = false; // if true, remembers final logo for session
-    const FINAL_OVERRIDE = null;  // e.g., "COL-02" to force final
-    const SHOW_TIMER = false;     // shows elapsed + tiny toast when true
+    const FINAL_OVERRIDE = params.get('final') || null;  // e.g., "COL-02" to force final
+    const SHOW_TIMER = params.has('debug') || false;     // shows elapsed + tiny toast when true
 
     // ========= STATE / DOM =========
     const SESSION_KEY = 'ecLogoShowcase';
