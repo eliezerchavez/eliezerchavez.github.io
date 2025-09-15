@@ -79,15 +79,15 @@
     integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
     crossorigin="anonymous" referrerpolicy="no-referrer">
 
-  <link rel="preload" href="/fonts/delight-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- <link rel="preload" href="/fonts/delight-regular.woff2" as="font" type="font/woff2" crossorigin> -->
 
   <style>
     :root {
       --tag-fg: #002E6D;
       --btn-fg: #002E6D;
-      --btn-size: clamp(48px, 5.5vw, 64px);
+      --btn-size: clamp(40px, 5.5vw, 56px);
       --btn-radius: 12px;
-      --icon-size: calc(var(--btn-size) * 0.42);
+      --icon-size: calc(var(--btn-size) * 0.44);
     }
 
     html,
@@ -128,6 +128,50 @@
       overflow: visible;
     }
 
+    .logo-box::after {
+      content: "";
+      position: absolute;
+      inset: -6% -10%;
+      /* extend outside to avoid edge clipping */
+      background-image: var(--logo-url, none);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      pointer-events: none;
+      z-index: 3;
+
+      /* Make it bloom when visible */
+      filter: brightness(2) contrast(1.05) blur(2px);
+      mix-blend-mode: screen;
+      /* adds that cinematic bloom on light BGs */
+      opacity: 0;
+      /* off until animated */
+
+      /* The moving band mask (WebKit + standard) */
+      -webkit-mask-image: linear-gradient(90deg,
+          transparent 0%,
+          rgba(0, 0, 0, 0.0) 42%,
+          rgba(0, 0, 0, 1.0) 48%,
+          rgba(0, 0, 0, 1.0) 52%,
+          rgba(0, 0, 0, 0.0) 58%,
+          transparent 100%);
+      mask-image: linear-gradient(90deg,
+          transparent 0%,
+          rgba(0, 0, 0, 0.0) 42%,
+          rgba(0, 0, 0, 1.0) 48%,
+          rgba(0, 0, 0, 1.0) 52%,
+          rgba(0, 0, 0, 0.0) 58%,
+          transparent 100%);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: 220% 100%;
+      /* oversize so it can traverse fully */
+      mask-size: 220% 100%;
+      -webkit-mask-position: -110% 0%;
+      /* start fully left */
+      mask-position: -110% 0%;
+    }
+
     #logo {
       width: 100%;
       height: 100%;
@@ -152,8 +196,34 @@
       }
     }
 
+    @keyframes lucasSweep {
+      0% {
+        opacity: 0;
+        -webkit-mask-position: -110% 0%;
+        mask-position: -110% 0%;
+      }
+
+      5% {
+        opacity: .9;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        -webkit-mask-position: 110% 0%;
+        mask-position: 110% 0%;
+      }
+    }
+
     .logo-glow {
       animation: logoGlow 900ms ease-out 1;
+    }
+
+    .logo-box.lucas::after {
+      animation: lucasSweep var(--lucas-sweep-ms, 1200ms) ease-out 1;
     }
 
     .tagline {
@@ -225,8 +295,8 @@
       position: fixed;
       right: 14px;
       bottom: 14px;
-      width: 48px;
-      height: 48px;
+      width: 32px;
+      height: 32px;
       border: 0;
       border-radius: 10px;
       background: #fff;
@@ -236,10 +306,11 @@
       opacity: 0;
       place-items: center;
       cursor: pointer;
-      font-size: 22px;
+      font-size: 12px;
     }
 
-    .btn:focus-visible .replay:focus-visible {
+    .btn:focus-visible,
+    .replay:focus-visible {
       outline: 2px solid var(--btn-fg);
       outline-offset: 3px;
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-fg) 25%, transparent);
@@ -313,7 +384,7 @@
     </nav>
 
     <!-- Replay button -->
-    <button id="replay" class="replay" aria-label="Replay intro (press R)" title="Replay (R)">
+    <button id="replay" class="replay" aria-label="Replay intro (press R)" title="Replay (R)" type="button">
       <i class="fa-solid fa-rotate-right"></i>
     </button>
 
@@ -352,14 +423,14 @@
     );
 
     const STYLE = {
-      "COL-01": { logo: { bg: "#FFFFFF", glow: "#002E6D" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
+      "COL-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
       "COL-02": { logo: { bg: "#002E6D", glow: "#FFFFFF" }, button: { fg: "#002E6D" }, tagline: { fg: "#FFFFFF" } },
       "GRS-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#1D252C" }, tagline: { fg: "#1D252C" } },
       "GRS-02": { logo: { bg: "#1D252C", glow: "#FFFFFF" }, button: { fg: "#1D252C" }, tagline: { fg: "#FFFFFF" } },
       "NEG-01": { logo: { bg: "#1D252C", glow: "#FFFFFF" }, button: { fg: "#1D252C" }, tagline: { fg: "#FFFFFF" } },
       "OUT-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#1D252C" }, tagline: { fg: "#1D252C" } },
-      "POS-01": { logo: { bg: "#FFFFFF", glow: "#002E6D" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
-      "POS-02": { logo: { bg: "#FFFFFF", glow: "#00C4B3" }, button: { fg: "#00C4B3" }, tagline: { fg: "#00C4B3" } }
+      "POS-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
+      "POS-02": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#00C4B3" }, tagline: { fg: "#00C4B3" } }
     };
 
     function getImageSrc(code) {
@@ -374,6 +445,12 @@
       // Pretty print milliseconds as e.g. "1.23s" or "85ms"
       if (ms < 1000) return `${Math.round(ms)}ms`;
       return `${(ms / 1000).toFixed(2)}s`;
+    }
+
+    async function animAppear(code) {
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '1';
     }
 
     function buildDebugHTML() {
@@ -600,7 +677,7 @@
 
     /* Randomly pick one of the subtle animations */
     async function finalReveal(code) {
-      imgEl.classList.remove('logo-glow');
+      // imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
       imgEl.style.transition = 'none';
       imgEl.style.opacity = '0';          // hide logo -> screen can go blank
       imgEl.style.transform = 'none';
@@ -645,7 +722,13 @@
       }
 
       // Soft glow after reveal
-      imgEl.classList.remove('logo-glow');
+      const boxEl = document.querySelector('.logo-box');
+      if (!prefersReduced && boxEl) {
+        boxEl.style.setProperty('--logo-url', `url("${imgEl.src}")`);
+        boxEl.classList.remove('lucas'); void boxEl.offsetWidth;
+        boxEl.style.setProperty('--lucas-sweep-ms', '1200ms');
+        boxEl.classList.add('lucas');
+      }
       // tick to restart animation if re-running
       void imgEl.offsetWidth;
 
@@ -741,10 +824,13 @@
     }
 
     document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      const isField = /^(A|BUTTON|INPUT|TEXTAREA|SELECT)$/.test(tag);
+      if (isField) return; // don't hijack keys when a control is focused
+
       if (e.key === 'r' || e.key === 'R') runShowcaseFlow();
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runShowcaseFlow(); }
     });
-
     // =========================
     // BOOT — run the 3 steps
     // (Optionally reveal tagline/actions after)
