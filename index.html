@@ -144,7 +144,7 @@
       }
 
       40% {
-        filter: drop-shadow(0 0 18px rgba(var(--glow-rgb, 255, 255, 255), .45));
+        filter: drop-shadow(0 0 14px rgba(var(--glow-rgb, 255, 255, 255), .38));
       }
 
       100% {
@@ -216,11 +216,6 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
     }
 
-    .btn:focus-visible {
-      outline: 2px solid var(--btn-fg);
-      outline-offset: 3px;
-    }
-
     .btn i {
       font-size: var(--icon-size);
       line-height: 1;
@@ -244,9 +239,10 @@
       font-size: 26px;
     }
 
-    .replay:focus-visible {
+    .btn:focus-visible .replay:focus-visible {
       outline: 2px solid var(--btn-fg);
       outline-offset: 3px;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-fg) 25%, transparent);
     }
 
     .debug {
@@ -320,7 +316,7 @@
     <button id="replay" class="replay" aria-label="Replay intro (press R)" data-tip="Replay (R)"
       title="Replay (R)">↻</button>
 
-    <aside id="debugBox" class="debug" hidden></aside>
+    <aside id="debugBox" class="debug" hidden aria-hidden="true"></aside>
   </div>
 
   <script>
@@ -745,6 +741,7 @@
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'r' || e.key === 'R') runShowcaseFlow();
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runShowcaseFlow(); }
     });
 
     // =========================
