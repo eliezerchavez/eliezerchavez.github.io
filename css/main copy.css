@@ -1,0 +1,292 @@
+:root {
+    --btn-fg: #002E6D;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color .2s ease;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center everything horizontally */
+  justify-content: center; /* center vertically */
+  position: relative;
+  height: 100%;
+}
+
+@media (max-width: 600px) {
+    .wrapper {
+        align-items: center;
+    }
+}
+
+
+.logo-box {
+  width: clamp(220px, 40vw, 76vmin);
+  max-height: 80vh;
+  aspect-ratio: 3 / 1.2;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+#logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    -webkit-user-drag: none;
+    user-select: none;
+    transition: opacity .18s ease, transform .18s ease;
+    opacity: 1;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+
+.actions.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--btn-fg);
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--btn-fg);
+    outline-offset: 3px;
+}
+
+.btn i {
+    font-size: 18px;
+    line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* Tagline */
+.tagline {
+  margin-top: 12px;
+  font-family: "Delight", "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(20px, 2.8vw, 32px);
+  color: rgba(0,0,0,0.82);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+body.dark-bg .tagline { color: rgba(255,255,255,0.9); }
+.tagline.show { opacity: 1; transform: translateY(0); }
+
+/* Replay button */
+.replay {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  width: 40px; height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--btn-fg);
+  box-shadow: 0 6px 18px rgba(0,0,0,.2);
+  display: inline-grid; place-items: center;
+  cursor: pointer;
+}
+.replay:focus-visible { outline: 2px solid var(--btn-fg); outline-offset: 3px; }
+
+/* Tooltips (slide-up) for any [data-tip] element */
+[data-tip] { position: relative; }
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%; bottom: 110%;
+  transform: translate(-50%, 6px);
+  background: rgba(0,0,0,.78);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  opacity: 1; transform: translate(-50%, 0);
+}
+
+/* Ripple effect */
+.btn { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute; border-radius: 50%;
+  transform: scale(0); opacity: .35;
+  background: currentColor; /* uses --btn-fg */
+  pointer-events: none;
+  animation: ripple .5s ease-out forwards;
+}
+@keyframes ripple {
+  to { transform: scale(12); opacity: 0; }
+}
+
+/* Final glow pulse behind logo (subtle) */
+.logo-glow {
+  animation: glowPulse 900ms ease-out 1;
+  filter: drop-shadow(0 0 0 rgba(0,0,0,0)); /* enable GPU path */
+}
+@keyframes glowPulse {
+  0%   { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+  50%  { filter: drop-shadow(0 0 24px rgba(255,255,255,0.45)); }
+  100% { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+}
+
+/* Background dynamics during showcase */
+body.bg-animate {
+  background: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,.9), rgba(255,255,255,1)),
+              linear-gradient(120deg, #0e2b57, #1a7fa0, #00c4b3);
+  background-blend-mode: overlay, normal;
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease-in-out infinite alternate, bgPulse 8s ease-in-out infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 0%, 0% 50%; }
+  100% { background-position: 100% 100%, 100% 50%; }
+}
+@keyframes bgPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.05); }
+}
+
+/* Final entrance effects */
+#logo.effect-fade {
+  opacity: 0;
+  animation: finalFade var(--final-fade-ms, 500ms) ease forwards;
+}
+@keyframes finalFade {
+  to { opacity: 1; }
+}
+#logo.effect-zoom {
+  opacity: 0; transform: scale(.96);
+  animation: finalZoom var(--final-fade-ms, 500ms) ease forwards;
+}
+@keyframes finalZoom {
+  to { opacity: 1; transform: scale(1); }
+}
+/* Wipe is done inline with clip-path; no extra CSS needed */
+
+/* Responsive button sizing (optional nice touch) */
+:root {
+  --btn-size: clamp(48px, 5.5vw, 64px);
+  --btn-radius: 12px;
+  --icon-size: calc(var(--btn-size) * 0.42);
+}
+.btn {
+  width: var(--btn-size);
+  height: var(--btn-size);
+  border-radius: var(--btn-radius);
+}
+.btn i {
+  font-size: var(--icon-size);
+  line-height: 1;
+  display: block;
+}
+
+/* --- Replay stays pinned bottom-right always --- */
+.replay {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  width: 44px; height: 44px;       /* a touch bigger */
+  z-index: 50;                      /* above everything */
+}
+
+/* Bigger, uses Delight with sensible fallbacks */
+.tagline {
+  margin: 14px 0 0 0;
+  font-family: "DELIGHT Regular", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: clamp(20px, 2.8vw, 32px);
+  letter-spacing: .2px;
+  color: rgba(0,0,0,0.82);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+body.dark-bg .tagline { color: rgba(255,255,255,0.9); }
+.tagline.show { opacity: 1; transform: translateY(0); }
+
+/* --- Subtle post-glow already exists; keep it universal --- */
+.logo-glow {
+  animation: glowPulse 900ms ease-out 1;
+}
+@keyframes glowPulse {
+  0%   { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+  50%  { filter: drop-shadow(0 0 24px rgba(255,255,255,0.45)); }
+  100% { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+}
+
+/* --- Background animation constrained to your brand colors --- */
+:root{
+  /* brand range */
+  --cA: #FFFFFF;  /* light */
+  --cB: #002E6D;  /* brand blue */
+  --cC: #1D252C;  /* slate */
+}
+body.bg-animate {
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,.92), var(--cA)),
+    linear-gradient(120deg, var(--cB), var(--cC), var(--cB));
+  background-blend-mode: overlay, normal;
+  background-size: 200% 200%, 200% 200%;
+  animation:
+    gradientShift 6s ease-in-out infinite alternate,
+    bgPulse 10s ease-in-out infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 0%,   0% 50%; }
+  50%  { background-position: 50% 50%, 50% 50%; }
+  100% { background-position: 100% 100%, 100% 50%; }
+}
+@keyframes bgPulse {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.05); }
+}
+
+/* Keep responsive button sizing if you liked it */
+:root {
+  --btn-size: clamp(48px, 5.5vw, 64px);
+  --btn-radius: 12px;
+  --icon-size: calc(var(--btn-size) * 0.42);
+}
+.btn { width: var(--btn-size); height: var(--btn-size); border-radius: var(--btn-radius); }
+.btn i { font-size: var(--icon-size); }

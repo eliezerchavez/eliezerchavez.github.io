@@ -75,26 +75,304 @@
 
   <!-- Font Awesome (icons) -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
     integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
     crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- <link rel="preload" href="/fonts/delight-regular.woff2" as="font" type="font/woff2" crossorigin> -->
+
+  <style>
+    :root {
+      --tag-fg: #002E6D;
+      --btn-fg: #002E6D;
+      --btn-size: clamp(40px, 5.5vw, 56px);
+      --btn-radius: 12px;
+      --icon-size: calc(var(--btn-size) * 0.44);
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color .2s ease;
+    }
+
+    @font-face {
+      font-family: 'Delight Regular';
+      src: url(/fonts/delight-regular.woff2) format('woff2');
+      font-display: swap;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 100%;
+    }
+
+    .logo-box {
+      width: clamp(220px, 40vw, 76vmin);
+      max-height: 80vh;
+      aspect-ratio: 3 / 1.2;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: visible;
+    }
+
+    .logo-box::after {
+      content: "";
+      position: absolute;
+      inset: -6% -10%;
+      /* extend outside to avoid edge clipping */
+      background-image: var(--logo-url, none);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      pointer-events: none;
+      z-index: 3;
+
+      /* Make it bloom when visible */
+      filter: brightness(2) contrast(1.05) blur(2px);
+      mix-blend-mode: screen;
+      /* adds that cinematic bloom on light BGs */
+      opacity: 0;
+      /* off until animated */
+
+      /* The moving band mask (WebKit + standard) */
+      -webkit-mask-image: linear-gradient(90deg,
+          transparent 0%,
+          rgba(0, 0, 0, 0.0) 42%,
+          rgba(0, 0, 0, 1.0) 48%,
+          rgba(0, 0, 0, 1.0) 52%,
+          rgba(0, 0, 0, 0.0) 58%,
+          transparent 100%);
+      mask-image: linear-gradient(90deg,
+          transparent 0%,
+          rgba(0, 0, 0, 0.0) 42%,
+          rgba(0, 0, 0, 1.0) 48%,
+          rgba(0, 0, 0, 1.0) 52%,
+          rgba(0, 0, 0, 0.0) 58%,
+          transparent 100%);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: 220% 100%;
+      /* oversize so it can traverse fully */
+      mask-size: 220% 100%;
+      -webkit-mask-position: -110% 0%;
+      /* start fully left */
+      mask-position: -110% 0%;
+    }
+
+    #logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+      user-select: none;
+      transition: opacity .18s ease, transform .18s ease;
+      opacity: 1;
+    }
+
+    @keyframes logoGlow {
+      0% {
+        filter: drop-shadow(0 0 0 rgba(var(--glow-rgb, 255, 255, 255), 0));
+      }
+
+      40% {
+        filter: drop-shadow(0 0 14px rgba(var(--glow-rgb, 255, 255, 255), .38));
+      }
+
+      100% {
+        filter: drop-shadow(0 0 0 rgba(var(--glow-rgb, 255, 255, 255), 0));
+      }
+    }
+
+    @keyframes lucasSweep {
+      0% {
+        opacity: 0;
+        -webkit-mask-position: -110% 0%;
+        mask-position: -110% 0%;
+      }
+
+      5% {
+        opacity: .9;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        -webkit-mask-position: 110% 0%;
+        mask-position: 110% 0%;
+      }
+    }
+
+    .logo-glow {
+      animation: logoGlow 900ms ease-out 1;
+    }
+
+    .logo-box.lucas::after {
+      animation: lucasSweep var(--lucas-sweep-ms, 1200ms) ease-out 1;
+    }
+
+    .tagline {
+      align-self: stretch;
+      /* make sure it spans full width of wrapper */
+      margin-top: 12px;
+      font-family: "Delight Regular", "Inter", system-ui, sans-serif;
+      font-weight: 300;
+      font-size: clamp(20px, 2.8vw, 32px);
+      color: var(--tag-fg);
+      opacity: 0;
+      text-align: right;
+      /* text hugs the right edge */
+      transform: translateY(6px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .actions {
+      align-self: stretch;
+      /* span full width of wrapper */
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      /* buttons sit on the right */
+      margin-top: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+    }
+
+    .actions.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 600px) {
+      .wrapper {
+        align-items: center;
+      }
+
+      .tagline {
+        text-align: center;
+      }
+
+      .actions {
+        justify-content: center;
+      }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--btn-size);
+      height: var(--btn-size);
+      border-radius: var(--btn-radius);
+      background: #fff;
+      color: var(--btn-fg);
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
+    }
+
+    .btn i {
+      font-size: var(--icon-size);
+      line-height: 1;
+    }
+
+    .replay {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--btn-fg);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
+      display: inline-grid;
+      opacity: 0;
+      place-items: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn:focus-visible,
+    .replay:focus-visible {
+      outline: 2px solid var(--btn-fg);
+      outline-offset: 3px;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-fg) 25%, transparent);
+    }
+
+    .debug {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 1000;
+      min-width: 150px;
+      max-width: 46vw;
+      font: 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: #fff;
+      background: rgba(0, 0, 0, .68);
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+      padding: 10px 12px;
+      backdrop-filter: blur(2px);
+    }
+
+    .debug h2 {
+      margin: 0 0 6px 0;
+      font: 700 12px/1 ui-monospace, monospace;
+      letter-spacing: .4px;
+      opacity: .9;
+    }
+
+    .debug .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 10px;
+    }
+
+    .debug dt {
+      opacity: .85;
+    }
+
+    .debug dd {
+      margin: 0;
+    }
+  </style>
 </head>
 
 <body>
   <div class="wrapper">
+    <!-- Logo -->
     <div class="logo-box">
       <img id="logo" alt=">EC" decoding="async" fetchpriority="high"
         src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" />
     </div>
 
+    <!-- Tagline -->
+    <div id="tagline" class="tagline">less stress, more success!</div>
+
+    <!-- Actions -->
     <nav class="actions" id="actions" aria-label="Quick contact">
-      <a class="btn" href="mailto:hi@eliezerchavez.com" aria-label="Email (No form. No tracking. Just drop a line.)"
-        title="Email • No form. No tracking. Just drop a line.">
+      <a class="btn" href="mailto:hi@eliezerchavez.com" title="Email Eli (opens mail app)" aria-label="Email Eli">
         <i class="fa-solid fa-envelope"></i>
       </a>
       <a class="btn" href="https://www.linkedin.com/in/eliezerchavez/" target="_blank" rel="noopener"
-        aria-label="LinkedIn (Opens in a new tab.)" title="LinkedIn • Opens in a new tab.">
+        title="LinkedIn (opens in new tab)" aria-label="LinkedIn">
         <i class="fa-brands fa-linkedin-in"></i>
       </a>
       <!-- Add GitHub back any time
@@ -104,9 +382,491 @@
       </a>
       -->
     </nav>
+
+    <!-- Replay button -->
+    <button id="replay" class="replay" aria-label="Replay intro (press R)" title="Replay (R)" type="button">
+      <i class="fa-solid fa-rotate-right"></i>
+    </button>
+
+    <aside id="debugBox" class="debug" hidden aria-hidden="true"></aside>
   </div>
 
-  <script src="/js/app.js" defer></script>
+  <script>
+    // =========================
+    // STEP 0 — DOM & CONFIG
+    // =========================
+    const imgEl = document.getElementById('logo');
+    const tagEl = document.getElementById('tagline');
+    const actEl = document.getElementById('actions');
+    const repEl = document.getElementById('replay');
+    const dbgEl = document.getElementById('debugBox');
+
+    const qs = new URLSearchParams(window.location.search); // Grab the query string from the current URL
+
+    // Showcase timing
+    const TARGET_MS = 3000;   // total shuffle duration (X ms)
+    const FRAME_MS = 100;     // minimum time each logo stays visible (per frame)
+    const FINAL_HOLD_MS = 700; // Pause before revealing the final logo
+    const TAGLINE_DELAY_MS = 250; // pause between showcase and tagline
+    const ACTION_DELAY_MS = 500; // pause between tagline and action buttons
+    const REPLAY_DELAY_MS = 1000; // pause between action buttons and replay button
+    const DEBUG = (qs.has('debug') && qs.get('debug') !== '0' && qs.get('debug') !== 'false') || false;
+    const ANIM_OVERRIDE = (qs.get('anim') || '').toLowerCase();
+    const MOTION_FORCE =
+      ['force', 'on', '1', 'true', 'yes'].includes((qs.get('motion') || '').toLowerCase())
+      || !!ANIM_OVERRIDE;
+    if (DEBUG) console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIM_OVERRIDE });
+
+    // Respect reduced motion
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Helper: feature test for clip-path
+    const canClip = CSS && (
+      CSS.supports('clip-path', 'inset(0 0 0 0)') ||
+      CSS.supports('-webkit-clip-path', 'inset(0 0 0 0)')
+    );
+
+    const STYLE = {
+      "COL-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
+      "COL-02": { logo: { bg: "#002E6D", glow: "#FFFFFF" }, button: { fg: "#002E6D" }, tagline: { fg: "#FFFFFF" } },
+      "GRS-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#1D252C" }, tagline: { fg: "#1D252C" } },
+      "GRS-02": { logo: { bg: "#1D252C", glow: "#FFFFFF" }, button: { fg: "#1D252C" }, tagline: { fg: "#FFFFFF" } },
+      "NEG-01": { logo: { bg: "#1D252C", glow: "#FFFFFF" }, button: { fg: "#1D252C" }, tagline: { fg: "#FFFFFF" } },
+      "OUT-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#1D252C" }, tagline: { fg: "#1D252C" } },
+      "POS-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
+      "POS-02": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#00C4B3" }, tagline: { fg: "#00C4B3" } }
+    };
+
+    function getImageSrc(code) {
+      if (!code) return null;
+      return '/img/' + code.toLowerCase() + '.svg';
+    }
+
+    // Metrics container (set in runShowcaseFlow)
+    let metrics = { start: 0, showcase: 0, t_tagline: 0, t_actions: 0, total: 0 };
+
+    function fmt(ms) {
+      // Pretty print milliseconds as e.g. "1.23s" or "85ms"
+      if (ms < 1000) return `${Math.round(ms)}ms`;
+      return `${(ms / 1000).toFixed(2)}s`;
+    }
+
+    async function animAppear(code) {
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '1';
+    }
+
+    function buildDebugHTML() {
+      return `
+    <h2>DEBUG</h2>
+    <dl class="kv">
+      <dt>Logo showcase</dt><dd>${fmt(metrics.showcase)}</dd>
+      <dt>Tagline at</dt><dd>${fmt(metrics.t_tagline)}</dd>
+      <dt>Actions at</dt><dd>${fmt(metrics.t_actions)}</dd>
+      <dt>Total elapsed</dt><dd>${fmt(metrics.total || (performance.now() - metrics.start))}</dd>
+    </dl>
+  `;
+    }
+
+    function updateDebug(mode) {
+      if (!DEBUG || !dbgEl) return;
+      dbgEl.hidden = false;
+      if (mode === 'reset') {
+        dbgEl.innerHTML = buildDebugHTML();
+      } else {
+        dbgEl.innerHTML = buildDebugHTML();
+      }
+    }
+
+    function hexToRgbTuple(hex) {
+      if (!hex) return [255, 255, 255];
+      let h = hex.replace('#', '').trim();
+      if (h.length === 3) h = h.split('').map(c => c + c).join('');
+      const int = parseInt(h, 16);
+      return [(int >> 16) & 255, (int >> 8) & 255, int & 255];
+    }
+
+    // --- Random helpers ---
+    function randFloat(min, max) { return Math.random() * (max - min) + min; }
+    function randInt(min, max) { return Math.floor(randFloat(min, max + 1)); }
+
+    // Keep the last animation to avoid immediate repeats
+    let _lastAnim = null;
+
+    // =========================
+    // STEP 1 — PRELOAD LOGOS
+    // =========================
+    function preloadLogos(timeoutMs = 300) {
+      const codes = Object.keys(STYLE);
+
+      // Hints via <link rel="preload"> + actual Image() loads
+      const hints = codes.map(code => new Promise(resolve => {
+        const src = getImageSrc(code);
+        if (!src) return resolve();
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = src;
+        link.onload = link.onerror = resolve;
+        document.head.appendChild(link);
+      }));
+
+      const loads = codes.map(code => new Promise(resolve => {
+        const src = getImageSrc(code);
+        if (!src) return resolve();
+        const im = new Image();
+        im.onload = im.onerror = resolve;
+        im.src = src;
+      }));
+
+      // Don’t block forever — race with a short timeout
+      return Promise.race([
+        Promise.all([...hints, ...loads]),
+        new Promise(r => setTimeout(r, timeoutMs))
+      ]);
+    }
+
+    // =========================
+    // STEP 2 — RANDOM PICK (no immediate repeats)
+    // =========================
+    function pickRandomDifferent(prev) {
+      const codes = Object.keys(STYLE);
+      if (codes.length <= 1) return codes[0];
+      let code;
+      do {
+        code = codes[Math.floor(Math.random() * codes.length)];
+      } while (code === prev);
+      return code;
+    }
+
+    // =========================
+    // Helpers: theme + instant swap
+    // =========================
+    function applyTheme(code) {
+      const item = STYLE[code];
+      if (!item) return;
+
+      // Set page BG and button color (CSS var) from map
+      document.body.style.backgroundColor = item.logo?.bg || '#FFFFFF';
+      document.documentElement.style.setProperty('--tag-fg', item.tagline?.fg || '#002E6D');
+      document.documentElement.style.setProperty('--btn-fg', item.button?.fg || '#002E6D');
+    }
+
+    async function showInstant(code) {
+      const item = STYLE[code];
+      if (!item) return;
+      applyTheme(code);
+
+      const nextSrc = getImageSrc(code);
+      if (nextSrc) {
+        // Set even if same — cheap and avoids relative/absolute URL mismatch issues
+        imgEl.src = nextSrc;
+        if (imgEl.decode) { try { await imgEl.decode(); } catch { } }
+      }
+    }
+
+    async function ensureLogoSource(code) {
+      const nextSrc = getImageSrc(code);
+      if (nextSrc && imgEl.src !== nextSrc) {
+        imgEl.src = nextSrc;
+        if (imgEl.decode) { try { await imgEl.decode(); } catch { } }
+      }
+    }
+
+    /* Fade in */
+    async function animFadeIn(code, dur = 600) {
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '0';
+      await new Promise(r => requestAnimationFrame(r));
+      imgEl.style.transition = `opacity ${dur}ms ease`;
+      imgEl.style.opacity = '1';
+      await sleep(dur);
+    }
+
+    /* Wipe from left (clip-path) */
+    async function animWipeLeft(code, dur = 900) {
+      if (!canClip) return animFadeIn(code, dur);
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '1';
+      imgEl.style.clipPath = 'inset(0 100% 0 0)';
+      imgEl.style.webkitClipPath = 'inset(0 100% 0 0)';
+      imgEl.style.willChange = 'clip-path';
+      await new Promise(r => requestAnimationFrame(r));
+      imgEl.style.transition = `clip-path ${dur}ms ease, -webkit-clip-path ${dur}ms ease`;
+      imgEl.style.clipPath = 'inset(0 0 0 0)';
+      imgEl.style.webkitClipPath = 'inset(0 0 0 0)';
+      await sleep(dur + 20);
+      imgEl.style.willChange = '';
+    }
+
+    /* Slide up (no fade) */
+    async function animSlideUp(code, dur = 700, distance = 14) {
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '1';
+      imgEl.style.transform = `translateY(${distance}px)`;
+      await new Promise(r => requestAnimationFrame(r));
+      imgEl.style.transition = `transform ${dur}ms ease`;
+      imgEl.style.transform = 'translateY(0)';
+      await sleep(dur);
+    }
+
+    /* Scale in (no fade) */
+    async function animScaleIn(code, dur = 650, from = 0.985) {
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '1';
+      imgEl.style.transform = `scale(${from})`;
+      await new Promise(r => requestAnimationFrame(r));
+      imgEl.style.transition = `transform ${dur}ms ease`;
+      imgEl.style.transform = 'scale(1)';
+      await sleep(dur);
+    }
+
+    /* Deblur (no fade) */
+    async function animBlurIn(code, dur = 750, startBlur = 3) {
+      await ensureLogoSource(code);
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '1';
+      imgEl.style.filter = `blur(${startBlur}px)`;
+      await new Promise(r => requestAnimationFrame(r));
+      imgEl.style.transition = `filter ${dur}ms ease`;
+      imgEl.style.filter = 'blur(0px)';
+      await sleep(dur);
+    }
+
+    /**
+     * Pick a final animation function, honoring:
+     * - override via ?anim=
+     * - canClip capability (skip wipe when unsupported)
+     * - no immediate repetition
+     * - uniform randomness among eligible options
+     */
+    function pickFinalAnimation() {
+      // Override first
+      switch (ANIM_OVERRIDE) {
+        case 'fade': return { fn: animFadeIn, name: 'fade' };
+        case 'wipe': return canClip ? { fn: animWipeLeft, name: 'wipe' } : { fn: animFadeIn, name: 'fade' };
+        case 'slide': return { fn: animSlideUp, name: 'slide' };
+        case 'scale': return { fn: animScaleIn, name: 'scale' };
+        case 'blur': return { fn: animBlurIn, name: 'blur' };
+      }
+
+      // Eligible set
+      const pool = [
+        { fn: animFadeIn, name: 'fade' },
+        ...(canClip ? [{ fn: animWipeLeft, name: 'wipe' }] : []),
+        { fn: animSlideUp, name: 'slide' },
+        { fn: animScaleIn, name: 'scale' },
+        { fn: animBlurIn, name: 'blur' },
+      ];
+
+      // If only one, return it
+      if (pool.length === 1) return pool[0];
+
+      // Avoid immediate repetition when possible
+      let candidates = pool;
+      if (_lastAnim) {
+        const filtered = pool.filter(a => a.name !== _lastAnim);
+        if (filtered.length) candidates = filtered;
+      }
+
+      const picked = candidates[randInt(0, candidates.length - 1)];
+      _lastAnim = picked.name; // remember for next run
+      return picked;
+    }
+
+    /* Randomly pick one of the subtle animations */
+    async function finalReveal(code) {
+      // imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
+      imgEl.style.transition = 'none';
+      imgEl.style.opacity = '0';          // hide logo -> screen can go blank
+      imgEl.style.transform = 'none';
+      imgEl.style.filter = 'none';
+      imgEl.style.clipPath = 'none';
+      imgEl.style.webkitClipPath = 'none';
+      imgEl.style.willChange = '';
+
+      // >>> Set the FINAL theme immediately so the background matches the final pick
+      applyTheme(code);
+      // Pause before reveal
+      await sleep(FINAL_HOLD_MS);
+
+      await new Promise(r => requestAnimationFrame(r)); // flush #1
+      await new Promise(r => requestAnimationFrame(r)); // flush #2
+
+      // Set glow color for this theme
+      const glowHex = STYLE[code]?.logo?.glow || '#FFFFFF';
+      const [gr, gg, gb] = hexToRgbTuple(glowHex);
+      document.documentElement.style.setProperty('--glow-rgb', `${gr}, ${gg}, ${gb}`);
+
+      // Choose animation
+      const { fn: animFn, name: animName } = pickFinalAnimation();
+
+      // Small per-run variations (feel more random)
+      const dur = Math.round(randFloat(560, 920)); // ms
+      const distance = randInt(10, 18);           // px for slide
+      const scaleFrom = randFloat(0.975, 0.99);   // for scale
+      const blurStart = randFloat(2.5, 3.5);      // px for blur
+
+      if (DEBUG) {
+        console.info('[finalReveal] picked:', animName, { dur, distance, scaleFrom, blurStart });
+        console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIM_OVERRIDE });
+      }
+
+      // Respect reduced motion
+      if (prefersReduced && !MOTION_FORCE) {
+        await animAppear(code);
+      } else {
+        switch (animName) {
+          case 'fade': await animFn(code, dur); break;
+          case 'wipe': await animFn(code, dur); break;
+          case 'slide': await animFn(code, dur, distance); break;
+          case 'scale': await animFn(code, dur, scaleFrom); break;
+          case 'blur': await animFn(code, dur, blurStart); break;
+          default: await animFadeIn(code, dur);
+        }
+      }
+
+      // Soft glow after reveal
+      await sleep(80);
+      const boxEl = document.querySelector('.logo-box');
+      if (!prefersReduced && boxEl) {
+        boxEl.style.setProperty('--logo-url', `url("${imgEl.src}")`);
+        boxEl.classList.remove('lucas'); void boxEl.offsetWidth;
+        boxEl.style.setProperty('--lucas-sweep-ms', '1200ms');
+        boxEl.classList.add('lucas');
+      }
+      // tick to restart animation if re-running
+      void imgEl.offsetWidth;
+
+      // After the animation finishes but before adding the class:
+      await Promise.resolve(); // microtask
+      requestAnimationFrame(() => {
+        imgEl.style.clipPath = 'none';
+        imgEl.style.webkitClipPath = 'none';
+        imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
+      });
+    }
+
+    const sleep = (ms) =>
+      new Promise((resolve) =>
+        (globalThis.setTimeout || window.setTimeout).call(globalThis, resolve, ms)
+      );
+
+    // =========================
+    // STEP 3 — DISPLAY SHUFFLE FOR A DURATION
+    // =========================
+    async function shuffleForDuration(totalMs = TARGET_MS, frameMs = FRAME_MS) {
+      let last = null;
+      const start = performance.now();
+
+      while (performance.now() - start < totalMs) {
+        const code = pickRandomDifferent(last);
+
+        const frameStart = performance.now();
+        await showInstant(code);
+        last = code;
+
+        // Keep each frame on screen at least frameMs
+        const elapsed = performance.now() - frameStart;
+        const wait = Math.max(0, frameMs - elapsed);
+        if (wait > 0) await sleep(wait);
+      }
+      return last; // return whichever logo ended last
+    }
+
+    async function runShowcaseFlow() {
+
+      // Reset visibility
+      if (tagEl) tagEl.style.opacity = 0;
+      if (actEl) {
+        actEl.classList.remove('show');
+        actEl.style.opacity = 0;
+      }
+      if (repEl) repEl.style.opacity = 0;
+
+      metrics = { start: performance.now(), showcase: 0, t_tagline: 0, t_actions: 0, total: 0 };
+      updateDebug('reset');
+
+      await preloadLogos();
+      const s0 = performance.now();
+      const lastShuffleCode = await shuffleForDuration();
+      const s1 = performance.now();
+      metrics.showcase = s1 - s0;
+      updateDebug && updateDebug();
+
+      // Choose a final code that's different from the last shuffle frame
+      const finalCode = pickRandomDifferent(lastShuffleCode);
+
+      await finalReveal(finalCode);
+
+      await sleep(TAGLINE_DELAY_MS);
+      if (tagEl) {
+        tagEl.style.transition = 'opacity .35s ease, transform .35s ease';
+        tagEl.style.opacity = 1;
+
+        metrics.t_tagline = performance.now() - metrics.start;
+        updateDebug();
+      }
+
+      await sleep(ACTION_DELAY_MS);
+      if (actEl) {
+        actEl.style.transition = 'opacity .2s ease';
+        actEl.style.opacity = 1;
+        actEl.classList.add('show');
+
+        metrics.t_actions = performance.now() - metrics.start;
+        metrics.total = metrics.t_actions;
+        updateDebug();
+      }
+
+      await sleep(REPLAY_DELAY_MS);
+      if (repEl) {
+        repEl.style.opacity = 1;
+      }
+    }
+
+    // =========================
+    if (repEl) {
+      repEl.addEventListener('click', () => runShowcaseFlow());
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      const isField = /^(A|BUTTON|INPUT|TEXTAREA|SELECT)$/.test(tag);
+      if (isField) return; // don't hijack keys when a control is focused
+
+      if (e.key === 'r' || e.key === 'R') runShowcaseFlow();
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runShowcaseFlow(); }
+    });
+    // =========================
+    // BOOT — run the 3 steps
+    // (Optionally reveal tagline/actions after)
+    // =========================
+    document.addEventListener('DOMContentLoaded', async () => {
+      // await preloadLogos();          // Step 1
+      // await shuffleForDuration();    // Steps 2 & 3
+
+      // // Optional reveal after the shuffle
+      // if (tagEl) {
+      //   tagEl.style.transition = 'opacity .5s ease';
+      //   tagEl.style.opacity = 1;
+      // }
+      // if (actEl) {
+      //   actEl.style.transition = 'opacity .5s ease';
+      //   actEl.style.opacity = 1;
+      // }
+      // if (repEl) {
+      //   repEl.style.transition = 'opacity .5s ease';
+      //   repEl.style.opacity = 1;
+      // }
+      runShowcaseFlow();
+    });
+  </script>
 </body>
 
 </html>
