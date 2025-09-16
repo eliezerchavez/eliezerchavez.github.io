@@ -321,22 +321,25 @@
       left: 14px;
       bottom: 14px;
       z-index: 1000;
-      min-width: 150px;
-      max-width: 46vw;
+      min-width: 200px;
+      max-width: 50vw;
+
       font: 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       color: #fff;
-      background: rgba(0, 0, 0, .68);
+      background: rgba(0, 0, 0, .65);
       border-radius: 10px;
       box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
-      padding: 10px 12px;
+      padding: 8px 10px;
       backdrop-filter: blur(2px);
+
+      max-height: calc(1.35em * 2 + 12px);
+      overflow-y: auto;
+      white-space: pre-line;
+      scrollbar-gutter: stable both-edges;
     }
 
     .debug h2 {
-      margin: 0 0 6px 0;
-      font: 700 12px/1 ui-monospace, monospace;
-      letter-spacing: .4px;
-      opacity: .9;
+      display: none;
     }
 
     .debug .kv {
@@ -403,7 +406,13 @@
 
     const qs = new URLSearchParams(window.location.search); // Grab the query string from the current URL
 
+    // Respect reduced motion
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Showcase timing
+    const COLOR = '#002E6D';
+    const BACKGROUND_COLOR = '#FFFFFF';
+    const GLOW_COLOR = '#1D252C'; // default glow color (overridden per theme)
     const TARGET_MS = 3000;   // total shuffle duration (X ms)
     const FRAME_MS = 100;     // minimum time each logo stays visible (per frame)
     const FINAL_HOLD_MS = 700; // Pause before revealing the final logo
@@ -411,17 +420,16 @@
     const ACTION_DELAY_MS = 500; // pause between tagline and action buttons
     const REPLAY_DELAY_MS = 1000; // pause between action buttons and replay button
     const DEBUG = (qs.has('debug') && qs.get('debug') !== '0' && qs.get('debug') !== 'false') || false;
-    const ANIM_OVERRIDE = (qs.get('anim') || '').toLowerCase();
+    const ANIMATION_OVERRIDE = (qs.get('animation') || '').toLowerCase();
     const MOTION_FORCE =
       ['force', 'on', '1', 'true', 'yes'].includes((qs.get('motion') || '').toLowerCase())
-      || !!ANIM_OVERRIDE;
-    if (DEBUG) console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIM_OVERRIDE });
+      || !!ANIMATION_OVERRIDE;
+    if (DEBUG) console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIMATION_OVERRIDE });
 
-    // Respect reduced motion
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 
     // Helper: feature test for clip-path
-    const canClip = CSS && (
+    const canClip = typeof CSS !== 'undefined' && (
       CSS.supports('clip-path', 'inset(0 0 0 0)') ||
       CSS.supports('-webkit-clip-path', 'inset(0 0 0 0)')
     );
@@ -437,6 +445,83 @@
       "POS-02": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#00C4B3" }, tagline: { fg: "#00C4B3" } }
     };
 
+    /*
+     * 
+     */
+    const ANIMATION = {
+      fade: async (code, el, dur = 600) => {
+        await ensureLogoSource(code);
+        await transition(el, {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+          dur, props: ['opacity']
+        });
+      },
+
+      wipe: async (code, el, dur = 900) => {
+        if (!canClip) return ANIMATION.fade(code, el, dur);
+        await ensureLogoSource(code);
+        await transition(el, {
+          from: { opacity: '1', clipPath: 'inset(0 100% 0 0)', webkitClipPath: 'inset(0 100% 0 0)' },
+          to: { clipPath: 'inset(0 0 0 0)', webkitClipPath: 'inset(0 0 0 0)' },
+          dur, props: ['clip-path', '-webkit-clip-path']
+        });
+      },
+
+      slide: async (code, el, dur = 700, distance = 14) => {
+        await ensureLogoSource(code);
+        await transition(el, {
+          from: { opacity: '1', transform: `translateY(${distance}px)` },
+          to: { transform: 'translateY(0)' },
+          dur, props: ['transform']
+        });
+      },
+
+      scale: async (code, el, dur = 650, fromScale = 0.985) => {
+        await ensureLogoSource(code);
+        await transition(el, {
+          from: { opacity: '1', transform: `scale(${fromScale})` },
+          to: { transform: 'scale(1)' },
+          dur, props: ['transform']
+        });
+      },
+
+      blur: async (code, el, dur = 750, startBlur = 3) => {
+        await ensureLogoSource(code);
+        await transition(el, {
+          from: { opacity: '1', filter: `blur(${startBlur}px)` },
+          to: { filter: 'blur(0px)' },
+          dur, props: ['filter']
+        });
+      }
+    };
+
+    /*
+     *
+     */
+    function setStyle(el, obj) { for (const k in obj) el.style[k] = obj[k]; }
+
+    const raf = () => new Promise(r => requestAnimationFrame(r));
+
+    async function transition(el, { from = {}, to = {}, dur = 600, ease = 'ease', props = [] }) {
+      el.style.transition = 'none';
+      setStyle(el, from);
+      await raf(); await raf();                               // (1) lock in the "from" styles
+
+      el.style.transition = props.length
+        ? props.map(p => `${p} ${dur}ms ${ease}`).join(', ')
+        : `all ${dur}ms ${ease}`;                             // (2) arm the transition
+
+      setStyle(el, to);                                       // (3) change styles → triggers CSS transition
+      await new Promise(r => setTimeout(r, dur + 20));        // (4) wait for it to finish (dur + small buffer)
+      el.style.transition = 'none';                           // (5) disarm to avoid animating future tweaks
+    }
+
+    /*
+     *
+     */
+
+
     function getImageSrc(code) {
       if (!code) return null;
       return '/img/' + code.toLowerCase() + '.svg';
@@ -449,6 +534,10 @@
       // Pretty print milliseconds as e.g. "1.23s" or "85ms"
       if (ms < 1000) return `${Math.round(ms)}ms`;
       return `${(ms / 1000).toFixed(2)}s`;
+    }
+
+    function fmtRaw(ms) {
+      return (ms / 1000).toFixed(2) + 's';
     }
 
     async function animAppear(code) {
@@ -493,6 +582,7 @@
 
     // Keep the last animation to avoid immediate repeats
     let _lastAnim = null;
+    let _lastAnimation = null;
 
     // =========================
     // STEP 1 — PRELOAD LOGOS
@@ -548,9 +638,9 @@
       if (!item) return;
 
       // Set page BG and button color (CSS var) from map
-      document.body.style.backgroundColor = item.logo?.bg || '#FFFFFF';
-      document.documentElement.style.setProperty('--tag-fg', item.tagline?.fg || '#002E6D');
-      document.documentElement.style.setProperty('--btn-fg', item.button?.fg || '#002E6D');
+      document.body.style.backgroundColor = item.logo?.bg || BACKGROUND_COLOR;
+      document.documentElement.style.setProperty('--tag-fg', item.tagline?.fg || COLOR);
+      document.documentElement.style.setProperty('--btn-fg', item.button?.fg || COLOR);
     }
 
     async function showInstant(code) {
@@ -574,182 +664,71 @@
       }
     }
 
-    /* Fade in */
-    async function animFadeIn(code, dur = 600) {
-      await ensureLogoSource(code);
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '0';
-      await new Promise(r => requestAnimationFrame(r));
-      imgEl.style.transition = `opacity ${dur}ms ease`;
-      imgEl.style.opacity = '1';
-      await sleep(dur);
-    }
-
-    /* Wipe from left (clip-path) */
-    async function animWipeLeft(code, dur = 900) {
-      if (!canClip) return animFadeIn(code, dur);
-      await ensureLogoSource(code);
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '1';
-      imgEl.style.clipPath = 'inset(0 100% 0 0)';
-      imgEl.style.webkitClipPath = 'inset(0 100% 0 0)';
-      imgEl.style.willChange = 'clip-path';
-      await new Promise(r => requestAnimationFrame(r));
-      imgEl.style.transition = `clip-path ${dur}ms ease, -webkit-clip-path ${dur}ms ease`;
-      imgEl.style.clipPath = 'inset(0 0 0 0)';
-      imgEl.style.webkitClipPath = 'inset(0 0 0 0)';
-      await sleep(dur + 20);
-      imgEl.style.willChange = '';
-    }
-
-    /* Slide up (no fade) */
-    async function animSlideUp(code, dur = 700, distance = 14) {
-      await ensureLogoSource(code);
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '1';
-      imgEl.style.transform = `translateY(${distance}px)`;
-      await new Promise(r => requestAnimationFrame(r));
-      imgEl.style.transition = `transform ${dur}ms ease`;
-      imgEl.style.transform = 'translateY(0)';
-      await sleep(dur);
-    }
-
-    /* Scale in (no fade) */
-    async function animScaleIn(code, dur = 650, from = 0.985) {
-      await ensureLogoSource(code);
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '1';
-      imgEl.style.transform = `scale(${from})`;
-      await new Promise(r => requestAnimationFrame(r));
-      imgEl.style.transition = `transform ${dur}ms ease`;
-      imgEl.style.transform = 'scale(1)';
-      await sleep(dur);
-    }
-
-    /* Deblur (no fade) */
-    async function animBlurIn(code, dur = 750, startBlur = 3) {
-      await ensureLogoSource(code);
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '1';
-      imgEl.style.filter = `blur(${startBlur}px)`;
-      await new Promise(r => requestAnimationFrame(r));
-      imgEl.style.transition = `filter ${dur}ms ease`;
-      imgEl.style.filter = 'blur(0px)';
-      await sleep(dur);
-    }
-
-    /**
-     * Pick a final animation function, honoring:
-     * - override via ?anim=
-     * - canClip capability (skip wipe when unsupported)
-     * - no immediate repetition
-     * - uniform randomness among eligible options
-     */
     function pickFinalAnimation() {
-      // Override first
-      switch (ANIM_OVERRIDE) {
-        case 'fade': return { fn: animFadeIn, name: 'fade' };
-        case 'wipe': return canClip ? { fn: animWipeLeft, name: 'wipe' } : { fn: animFadeIn, name: 'fade' };
-        case 'slide': return { fn: animSlideUp, name: 'slide' };
-        case 'scale': return { fn: animScaleIn, name: 'scale' };
-        case 'blur': return { fn: animBlurIn, name: 'blur' };
+      if (ANIMATION_OVERRIDE && ANIMATION[ANIMATION_OVERRIDE]) {
+        _lastAnimation = ANIMATION_OVERRIDE;
+        return ANIMATION_OVERRIDE;
       }
 
-      // Eligible set
-      const pool = [
-        { fn: animFadeIn, name: 'fade' },
-        ...(canClip ? [{ fn: animWipeLeft, name: 'wipe' }] : []),
-        { fn: animSlideUp, name: 'slide' },
-        { fn: animScaleIn, name: 'scale' },
-        { fn: animBlurIn, name: 'blur' },
-      ];
+      const pool = ['fade', ...(canClip ? ['wipe'] : []), 'slide', 'scale', 'blur'];
 
-      // If only one, return it
-      if (pool.length === 1) return pool[0];
-
-      // Avoid immediate repetition when possible
-      let candidates = pool;
-      if (_lastAnim) {
-        const filtered = pool.filter(a => a.name !== _lastAnim);
-        if (filtered.length) candidates = filtered;
-      }
-
-      const picked = candidates[randInt(0, candidates.length - 1)];
-      _lastAnim = picked.name; // remember for next run
-      return picked;
-    }
-
-    /* Randomly pick one of the subtle animations */
-    async function finalReveal(code) {
-      // imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '0';          // hide logo -> screen can go blank
-      imgEl.style.transform = 'none';
-      imgEl.style.filter = 'none';
-      imgEl.style.clipPath = 'none';
-      imgEl.style.webkitClipPath = 'none';
-      imgEl.style.willChange = '';
-
-      // >>> Set the FINAL theme immediately so the background matches the final pick
-      applyTheme(code);
-      // Pause before reveal
-      await sleep(FINAL_HOLD_MS);
-
-      await new Promise(r => requestAnimationFrame(r)); // flush #1
-      await new Promise(r => requestAnimationFrame(r)); // flush #2
-
-      // Set glow color for this theme
-      const glowHex = STYLE[code]?.logo?.glow || '#FFFFFF';
-      const [gr, gg, gb] = hexToRgbTuple(glowHex);
-      document.documentElement.style.setProperty('--glow-rgb', `${gr}, ${gg}, ${gb}`);
-
-      // Choose animation
-      const { fn: animFn, name: animName } = pickFinalAnimation();
-
-      // Small per-run variations (feel more random)
-      const dur = Math.round(randFloat(560, 920)); // ms
-      const distance = randInt(10, 18);           // px for slide
-      const scaleFrom = randFloat(0.975, 0.99);   // for scale
-      const blurStart = randFloat(2.5, 3.5);      // px for blur
-
-      if (DEBUG) {
-        console.info('[finalReveal] picked:', animName, { dur, distance, scaleFrom, blurStart });
-        console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIM_OVERRIDE });
-      }
-
-      // Respect reduced motion
-      if (prefersReduced && !MOTION_FORCE) {
-        await animAppear(code);
-      } else {
-        switch (animName) {
-          case 'fade': await animFn(code, dur); break;
-          case 'wipe': await animFn(code, dur); break;
-          case 'slide': await animFn(code, dur, distance); break;
-          case 'scale': await animFn(code, dur, scaleFrom); break;
-          case 'blur': await animFn(code, dur, blurStart); break;
-          default: await animFadeIn(code, dur);
+      // Try to avoid immediate repetition
+      if (_lastAnimation) {
+        const notLast = pool.filter(name => name !== _lastAnimation); // <-- array
+        if (notLast.length) {
+          const next = notLast[Math.floor(Math.random() * notLast.length)];
+          _lastAnimation = next;
+          return next;
         }
       }
 
-      // Soft glow after reveal
+      // Fallback random
+      const next = pool[Math.floor(Math.random() * pool.length)];
+      _lastAnimation = next;
+      return next;
+    }
+
+    async function finalReveal(code) {
+      //reset state
+      setStyle(imgEl, { transition: 'none', opacity: '0', transform: 'none', filter: 'none', clipPath: 'none', webkitClipPath: 'none', willChange: '' });
+      applyTheme(code);
+      await sleep(FINAL_HOLD_MS);
+      await raf(); await raf(); // guarantee pre-state is committed
+
+      // glow color
+      const glowHex = STYLE[code]?.logo?.glow || GLOW_COLOR;
+      const [gr, gg, gb] = hexToRgbTuple(glowHex);
+      document.documentElement.style.setProperty('--glow-rgb', `${gr}, ${gg}, ${gb}`);
+
+      // choose + run
+      const animationName = pickFinalAnimation();
+      const dur = Math.round(randFloat(560, 920));
+      const distance = randInt(10, 18);
+      const scaleFrom = randFloat(0.975, 0.99);
+      const blurStart = randFloat(2.5, 3.5);
+      if (DEBUG) console.info('[finalReveal]', animationName, { dur, distance, scaleFrom, blurStart });
+
+      if (prefersReduced && !MOTION_FORCE) {
+        await animAppear(code);
+      } else {
+        if (animationName === 'slide') await ANIMATION.slide(code, imgEl, dur, distance);
+        else if (animationName === 'scale') await ANIMATION.scale(code, imgEl, dur, scaleFrom);
+        else if (animationName === 'blur') await ANIMATION.blur(code, imgEl, dur, blurStart);
+        else await ANIMATION[animationName](code, imgEl, dur);
+      }
+
+      // start glow once
+      imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
+
+      // Lucas sweep
       await sleep(80);
       const boxEl = document.querySelector('.logo-box');
-      if (!prefersReduced && boxEl) {
-        boxEl.style.setProperty('--logo-url', `url("${imgEl.src}")`);
-        boxEl.classList.remove('lucas'); void boxEl.offsetWidth;
-        boxEl.style.setProperty('--lucas-sweep-ms', '1200ms');
-        boxEl.classList.add('lucas');
+      if (!prefersReduced || MOTION_FORCE) {
+        boxEl?.style.setProperty('--logo-url', `url("${imgEl.src}")`);
+        boxEl?.classList.remove('lucas'); void boxEl?.offsetWidth;
+        boxEl?.style.setProperty('--lucas-sweep-ms', '1200ms');
+        boxEl?.classList.add('lucas');
       }
-      // tick to restart animation if re-running
-      void imgEl.offsetWidth;
-
-      // After the animation finishes but before adding the class:
-      await Promise.resolve(); // microtask
-      requestAnimationFrame(() => {
-        imgEl.style.clipPath = 'none';
-        imgEl.style.webkitClipPath = 'none';
-        imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
-      });
     }
 
     const sleep = (ms) =>
@@ -790,14 +769,14 @@
       if (repEl) repEl.style.opacity = 0;
 
       metrics = { start: performance.now(), showcase: 0, t_tagline: 0, t_actions: 0, total: 0 };
-      updateDebug('reset');
+      if (DEBUG) { dbgBuffer = []; dbgStartTicker(); dbgPush('Flow started'); }
 
       await preloadLogos();
       const s0 = performance.now();
       const lastShuffleCode = await shuffleForDuration();
       const s1 = performance.now();
       metrics.showcase = s1 - s0;
-      updateDebug && updateDebug();
+      if (DEBUG) dbgPush(`Showcase done in ${fmt(metrics.showcase)}`);
 
       // Choose a final code that's different from the last shuffle frame
       const finalCode = pickRandomDifferent(lastShuffleCode);
@@ -810,7 +789,7 @@
         tagEl.style.opacity = 1;
 
         metrics.t_tagline = performance.now() - metrics.start;
-        updateDebug();
+        if (DEBUG) dbgPush('Tagline shown');
       }
 
       await sleep(ACTION_DELAY_MS);
@@ -821,13 +800,14 @@
 
         metrics.t_actions = performance.now() - metrics.start;
         metrics.total = metrics.t_actions;
-        updateDebug();
+        if (DEBUG) dbgPush('Actions shown');
       }
 
       await sleep(REPLAY_DELAY_MS);
       if (repEl) {
         repEl.style.opacity = 1;
       }
+      if (DEBUG) { dbgPush('Replay visible'); dbgStopTicker(); }
     }
 
     // =========================
@@ -866,6 +846,49 @@
       // }
       runShowcaseFlow();
     });
+
+    // --- DEBUG LOGGING --- //
+    let dbgBuffer = [];
+
+    function dbgPush(line) {
+      if (!DEBUG || !dbgEl) return;
+      const now = Math.round(performance.now() - (metrics.start || 0));
+      dbgBuffer.push(`[+${fmtRaw(now)}] ${line}`);
+      dbgEl.hidden = false;
+      dbgEl.textContent = dbgBuffer.join('\n');
+      dbgEl.scrollTop = dbgEl.scrollHeight; // keep view pinned to latest
+    }
+
+    // Live ticker that displays current elapsed values while flow runs
+    let dbgTickerId = null;
+    function dbgStartTicker() {
+      if (!DEBUG || !dbgEl) return;
+      if (dbgTickerId) return;
+      dbgEl.hidden = false;
+
+      dbgTickerId = setInterval(() => {
+        const now = performance.now();
+        const total = Math.round((metrics.total || now) - (metrics.start || now));
+        const lines = [];
+
+        if (metrics.showcase) lines.push(`Showcase: ${fmt(metrics.showcase)}`);
+        if (metrics.t_tagline) lines.push(`Tagline: ${fmt(metrics.t_tagline)}`);
+        if (metrics.t_actions) lines.push(`Actions: ${fmt(metrics.t_actions)}`);
+        lines.push(`Elapsed: ${fmt(total)}`);
+
+        // render the full log + a live status line at the end
+        const statusBlock = lines.join('  ·  ');
+        dbgEl.textContent = [...dbgBuffer, statusBlock].join('\n');
+        dbgEl.scrollTop = dbgEl.scrollHeight; // keep it scrolled
+      }, 120);
+    }
+
+    function dbgStopTicker() {
+      if (dbgTickerId) {
+        clearInterval(dbgTickerId);
+        dbgTickerId = null;
+      }
+    }
   </script>
 </body>
 
