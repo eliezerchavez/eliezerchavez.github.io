@@ -412,6 +412,10 @@
     const REPLAY_DELAY_MS = 1000; // pause between action buttons and replay button
     const DEBUG = (qs.has('debug') && qs.get('debug') !== '0' && qs.get('debug') !== 'false') || false;
     const ANIM_OVERRIDE = (qs.get('anim') || '').toLowerCase();
+    const MOTION_FORCE =
+      ['force', 'on', '1', 'true', 'yes'].includes((qs.get('motion') || '').toLowerCase())
+      || !!ANIM_OVERRIDE;
+    if (DEBUG) console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIM_OVERRIDE });
 
     // Respect reduced motion
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -691,6 +695,9 @@
       // Pause before reveal
       await sleep(FINAL_HOLD_MS);
 
+      await new Promise(r => requestAnimationFrame(r)); // flush #1
+      await new Promise(r => requestAnimationFrame(r)); // flush #2
+
       // Set glow color for this theme
       const glowHex = STYLE[code]?.logo?.glow || '#FFFFFF';
       const [gr, gg, gb] = hexToRgbTuple(glowHex);
@@ -705,10 +712,13 @@
       const scaleFrom = randFloat(0.975, 0.99);   // for scale
       const blurStart = randFloat(2.5, 3.5);      // px for blur
 
-      if (DEBUG) console.info('[finalReveal] picked:', animName, { dur, distance, scaleFrom, blurStart });
+      if (DEBUG) {
+        console.info('[finalReveal] picked:', animName, { dur, distance, scaleFrom, blurStart });
+        console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIM_OVERRIDE });
+      }
 
       // Respect reduced motion
-      if (prefersReduced) {
+      if (prefersReduced && !MOTION_FORCE) {
         await animAppear(code);
       } else {
         switch (animName) {
@@ -722,6 +732,7 @@
       }
 
       // Soft glow after reveal
+      await sleep(80);
       const boxEl = document.querySelector('.logo-box');
       if (!prefersReduced && boxEl) {
         boxEl.style.setProperty('--logo-url', `url("${imgEl.src}")`);
@@ -739,11 +750,12 @@
         imgEl.style.webkitClipPath = 'none';
         imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
       });
-
-      imgEl.classList.add('logo-glow');
     }
 
-    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+    const sleep = (ms) =>
+      new Promise((resolve) =>
+        (globalThis.setTimeout || window.setTimeout).call(globalThis, resolve, ms)
+      );
 
     // =========================
     // STEP 3 — DISPLAY SHUFFLE FOR A DURATION
