@@ -458,14 +458,42 @@
         });
       },
 
-      wipe: async (code, el, dur = 900) => {
-        if (!canClip) return ANIMATION.fade(code, el, dur);
+      wipe: async (code, el, dur = 900, { bg } = {}) => {
         await ensureLogoSource(code);
-        await transition(el, {
-          from: { opacity: '1', clipPath: 'inset(0 100% 0 0)', webkitClipPath: 'inset(0 100% 0 0)' },
-          to: { clipPath: 'inset(0 0 0 0)', webkitClipPath: 'inset(0 0 0 0)' },
-          dur, props: ['clip-path', '-webkit-clip-path']
+
+        // Host to mount the curtain (your .logo-box is already position:relative)
+        const host = el.closest('.logo-box') || el.parentElement || document.body;
+
+        // Derive a sane background color if not passed
+        const bgColor = bg || getComputedStyle(document.body).backgroundColor || '#fff';
+
+        // Build a one-off overlay that fully covers the logo and slides out
+        const curtain = document.createElement('div');
+        Object.assign(curtain.style, {
+          position: 'absolute',
+          // Overscan on all sides to avoid any 1px gap from AA/rounding
+          inset: '-2px -3px -2px -3px',
+          background: bgColor,
+          transform: 'translate3d(0,0,0)',      // force own layer
+          willChange: 'transform',
+          backfaceVisibility: 'hidden',
+          pointerEvents: 'none',
+          zIndex: '2' // under ::after (your z-index:3), above the img
         });
+        host.appendChild(curtain);
+
+        // Make sure the image is visible and not transitioning opacity here
+        el.style.transition = 'none';
+        el.style.opacity = '1';
+
+        // Animate the curtain away (left -> right)
+        await (new Promise(r => requestAnimationFrame(r)));
+        await (new Promise(r => requestAnimationFrame(r)));
+        curtain.style.transition = `transform ${dur}ms ease`;
+        curtain.style.transform = 'translateX(110%)'; // slight overshoot to avoid seams
+
+        await new Promise(r => setTimeout(r, dur + 24));
+        curtain.remove();
       },
 
       slide: async (code, el, dur = 700, distance = 14) => {
