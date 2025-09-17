@@ -6,32 +6,45 @@ const tagEl = document.getElementById('tagline');
 const actEl = document.getElementById('actions');
 const repEl = document.getElementById('replay');
 const dbgEl = document.getElementById('debugBox');
-const boxEl = document.querySelector('.logo-box'); // cached once
+const boxEl = document.querySelector('.logo-box');
 
 const qs = new URLSearchParams(window.location.search);
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ======================================
-//
-// CONFIG (alphabetized keys)
-//
-const CFG = {
-    ACTION_DELAY_MS: 500,
-    ANIMATION_OVERRIDE: (qs.get('animation') || '').toLowerCase(),
-    BG: '#FFFFFF',
-    COLOR: '#002E6D',
-    DEBUG: (qs.has('debug') && !['0', 'false'].includes(qs.get('debug')?.toLowerCase())),
-    FINAL_HOLD_MS: 700,
-    FRAME_MS: 100,
-    GLOW: '#1D252C',
-    REPLAY_DELAY_MS: 1000,
-    TAGLINE_DELAY_MS: 250,
-    TARGET_MS: 3000
+// CONFIG
+// ======================================
+const CONFIG = {
+    SHOWCASE: {
+        DURATION: Number(qs.get('duration')) || 3000,
+        FRAME_MIN: 100,
+        FINAL_HOLD: 700
+    },
+    ANIMATION: {
+        NAME: (qs.get('animation') || '').toLowerCase(),
+    },
+    SEQUENCE: {
+        TAGLINE_DELAY: 250,
+        ACTION_DELAY: 500,
+        REPLAY_DELAY: 1000
+    },
+    COLOR: {
+        BACKGROUND: '#FFFFFF',
+        FOREGROUND: '#002E6D',
+        LOGO: { GLOW: '#1D252C' }
+    },
+    DEBUG: (qs.has('debug') && !['0', 'false'].includes(qs.get('debug')?.toLowerCase()))
 };
 
+// wire logger now that CONFIG is known
+LOG.setEnabled(CONFIG.DEBUG || ['log', 'trace', 'verbose'].includes((qs.get('log') || '').toLowerCase()));
+
+// ======================================
+// CAPABILITIES
+// ======================================
 const MOTION_FORCE =
     ['force', 'on', '1', 'true', 'yes'].includes((qs.get('motion') || '').toLowerCase()) ||
-    !!CFG.ANIMATION_OVERRIDE;
+    !!CONFIG.ANIMATION.NAME;
 
 const canClip =
     typeof CSS !== 'undefined' &&
@@ -42,14 +55,14 @@ const canClip =
 // THEME MAP
 // ======================================
 const THEME = {
-    "COL-01": { bg: { color: "#FFFFFF" }, logo: { glow: "#1D252C" }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" } },
-    "COL-02": { bg: { color: "#002E6D" }, logo: { glow: "#FFFFFF" }, button: { color: "#002E6D" }, tagline: { color: "#FFFFFF" } },
-    "GRS-01": { bg: { color: "#FFFFFF" }, logo: { glow: "#1D252C" }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" } },
-    "GRS-02": { bg: { color: "#1D252C" }, logo: { glow: "#FFFFFF" }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" } },
-    "NEG-01": { bg: { color: "#1D252C" }, logo: { glow: "#FFFFFF" }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" } },
-    "OUT-01": { bg: { color: "#FFFFFF" }, logo: { glow: "#1D252C" }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" } },
-    "POS-01": { bg: { color: "#FFFFFF" }, logo: { glow: "#1D252C" }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" } },
-    "POS-02": { bg: { color: "#FFFFFF" }, logo: { glow: "#1D252C" }, button: { color: "#00C4B3" }, tagline: { color: "#00C4B3" } }
+    "COL-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" } },
+    "COL-02": { bg: { color: "#002E6D" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#002E6D" }, tagline: { color: "#FFFFFF" } },
+    "GRS-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" } },
+    "GRS-02": { bg: { color: "#1D252C" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" } },
+    "NEG-01": { bg: { color: "#1D252C" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" } },
+    "OUT-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" } },
+    "POS-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" } },
+    "POS-02": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#00C4B3" }, tagline: { color: "#00C4B3" } }
 };
 
 // ======================================
@@ -61,7 +74,7 @@ const raf = () => new Promise(r => requestAnimationFrame(r));
 const randFloat = (min, max) => Math.random() * (max - min) + min;
 const randInt = (min, max) => Math.floor(randFloat(min, max + 1));
 const setStyle = (el, obj) => { for (const k in obj) el.style[k] = obj[k]; };
-const getImageSrc = (code) => (code ? '/img/' + code.toLowerCase() + '.svg' : null);
+const getImgSrc = (code) => (code ? '/img/' + code.toLowerCase() + '.svg' : null);
 
 const hexToRgbTuple = (hex) => {
     if (!hex) return [255, 255, 255];
@@ -86,18 +99,19 @@ async function transition(el, { dur = 600, ease = 'ease', from = {}, props = [],
 }
 
 // ======================================
-// THEME / IMAGES
+/* THEME / IMAGES */
 // ======================================
 function applyTheme(code) {
     const item = THEME[code];
     if (!item) return;
-    document.body.style.backgroundColor = item.bg?.color || CFG.BG;
-    document.documentElement.style.setProperty('--tag-color', item.tagline?.color || CFG.COLOR);
-    document.documentElement.style.setProperty('--btn-color', item.button?.color || CFG.COLOR);
+    document.body.style.backgroundColor = item.bg?.color || CONFIG.COLOR.BACKGROUND;
+    document.documentElement.style.setProperty('--tag-color', item.tagline?.color || CONFIG.COLOR.FOREGROUND);
+    document.documentElement.style.setProperty('--btn-color', item.button?.color || CONFIG.COLOR.FOREGROUND);
+    LOG.log('Theme applied', { code, bg: item.bg?.color, btn: item.button?.color, tag: item.tagline?.color });
 }
 
 async function ensureLogoSource(code) {
-    const next = getImageSrc(code);
+    const next = getImgSrc(code);
     if (next && imgEl.src !== next) {
         imgEl.src = next;
         if (imgEl.decode) { try { await imgEl.decode(); } catch { } }
@@ -108,22 +122,22 @@ async function showInstant(code) {
     const item = THEME[code];
     if (!item) return;
     applyTheme(code);
-    const next = getImageSrc(code);
+    const next = getImgSrc(code);
     if (next) {
         imgEl.src = next;
         if (imgEl.decode) { try { await imgEl.decode(); } catch { } }
+        LOG.log('Logo frame shown', { code, src: next });
     }
 }
 
 // ======================================
 // ANIMATIONS
 // ======================================
-const ANIM = {
+const ANIMATION = {
     appear: async (code, el) => {
         await ensureLogoSource(code);
         setStyle(el, { opacity: '1', transition: 'none' });
     },
-
     blur: async (code, el, dur = 750, startBlur = 3) => {
         await ensureLogoSource(code);
         await transition(el, {
@@ -133,7 +147,6 @@ const ANIM = {
             to: { filter: 'blur(0px)' }
         });
     },
-
     fade: async (code, el, dur = 600) => {
         await ensureLogoSource(code);
         await transition(el, {
@@ -143,7 +156,6 @@ const ANIM = {
             to: { opacity: '1' }
         });
     },
-
     scale: async (code, el, dur = 650, fromScale = 0.985) => {
         await ensureLogoSource(code);
         await transition(el, {
@@ -153,7 +165,6 @@ const ANIM = {
             to: { transform: 'scale(1)' }
         });
     },
-
     slide: async (code, el, dur = 700, distance = 14) => {
         await ensureLogoSource(code);
         await transition(el, {
@@ -163,45 +174,42 @@ const ANIM = {
             to: { transform: 'translateY(0)' }
         });
     },
-
+    // Curtain-based wipe to allow glow spill beyond box while hiding reveal seam
     wipe: async (code, el, dur = 900, { bg } = {}) => {
         await ensureLogoSource(code);
 
         const host = el.closest('.logo-box') || el.parentElement || document.body;
-        const bgColor = bg || getComputedStyle(document.body).backgroundColor || CFG.BG;
+        const bgColor = bg || getComputedStyle(document.body).backgroundColor || CONFIG.COLOR.BACKGROUND;
 
         const curtain = document.createElement('div');
         Object.assign(curtain.style, {
             position: 'absolute',
-            // Overscan on all sides to avoid any 1px gap from AA/rounding
             inset: '-2px -3px -2px -3px',
             background: bgColor,
-            transform: 'translate3d(0,0,0)',      // force own layer
+            transform: 'translate3d(0,0,0)',
             willChange: 'transform',
             backfaceVisibility: 'hidden',
             pointerEvents: 'none',
-            zIndex: '2' // under ::after (your z-index:3), above the img
+            zIndex: '2'
         });
 
-        // Mount fully covering BEFORE we kick off the transition
         host.appendChild(curtain);
 
-        // Ensure the logo is visible; the curtain hides it
         el.style.transition = 'none';
         el.style.opacity = '1';
 
-        // Two RAFs to guarantee paint with covering state
-        await new Promise(r => requestAnimationFrame(r));
-        await new Promise(r => requestAnimationFrame(r));
+        await raf(); await raf();
 
-        // Slide the curtain out with a slight overshoot so no trailing seam remains
         curtain.style.transition = `transform ${dur}ms ease`;
         curtain.style.transform = 'translate3d(120%,0,0)';
 
-        await new Promise(r => setTimeout(r, dur + 24));
+        await sleep(dur + 24);
         curtain.remove();
     }
 };
+
+// Auto-wrap all animation functions for console tracing
+LOG.wrapMethods(ANIMATION, 'ANIMATION');
 
 // ======================================
 // PICKERS
@@ -216,8 +224,8 @@ function pickRandomDifferent(prev) {
 
 let lastAnimation = null;
 function pickFinalAnimation() {
-    if (CFG.ANIMATION_OVERRIDE && ANIM[CFG.ANIMATION_OVERRIDE]) {
-        lastAnimation = CFG.ANIMATION_OVERRIDE;
+    if (CONFIG.ANIMATION.NAME && ANIMATION[CONFIG.ANIMATION.NAME]) {
+        lastAnimation = CONFIG.ANIMATION.NAME;
         return lastAnimation;
     }
     const pool = ['fade', ...(canClip ? ['wipe'] : []), 'slide', 'scale', 'blur'];
@@ -236,29 +244,31 @@ function pickFinalAnimation() {
 // FLOW HELPERS
 // ======================================
 async function preloadLogos(timeoutMs = 300) {
-    const codes = Object.keys(THEME);
+    return LOG.timeAsync('preloadLogos', async () => {
+        const codes = Object.keys(THEME);
 
-    const hints = codes.map(code => new Promise(resolve => {
-        const src = getImageSrc(code); if (!src) return resolve();
-        const link = document.createElement('link');
-        link.as = 'image';
-        link.href = src;
-        link.rel = 'preload';
-        link.onload = link.onerror = resolve;
-        document.head.appendChild(link);
-    }));
+        const hints = codes.map(code => new Promise(resolve => {
+            const src = getImgSrc(code); if (!src) return resolve();
+            const link = document.createElement('link');
+            link.as = 'image';
+            link.href = src;
+            link.rel = 'preload';
+            link.onload = link.onerror = resolve;
+            document.head.appendChild(link);
+        }));
 
-    const loads = codes.map(code => new Promise(resolve => {
-        const src = getImageSrc(code); if (!src) return resolve();
-        const im = new Image();
-        im.onload = im.onerror = resolve;
-        im.src = src;
-    }));
+        const loads = codes.map(code => new Promise(resolve => {
+            const src = getImgSrc(code); if (!src) return resolve();
+            const im = new Image();
+            im.onload = im.onerror = resolve;
+            im.src = src;
+        }));
 
-    return Promise.race([Promise.all([...hints, ...loads]), new Promise(r => setTimeout(r, timeoutMs))]);
+        return Promise.race([Promise.all([...hints, ...loads]), new Promise(r => setTimeout(r, timeoutMs))]);
+    });
 }
 
-async function shuffleForDuration(totalMs = CFG.TARGET_MS, frameMs = CFG.FRAME_MS) {
+async function shuffleForDuration(totalMs = CONFIG.SHOWCASE.DURATION, frameMs = CONFIG.SHOWCASE.FRAME_MIN) {
     let last = null;
     const start = performance.now();
 
@@ -276,48 +286,41 @@ async function shuffleForDuration(totalMs = CFG.TARGET_MS, frameMs = CFG.FRAME_M
 }
 
 async function finalReveal(code) {
-    // reset state
     setStyle(imgEl, {
-        clipPath: 'none',
-        filter: 'none',
-        opacity: '0',
-        transform: 'none',
-        transition: 'none',
-        webkitClipPath: 'none',
-        willChange: ''
+        clipPath: 'none', filter: 'none', opacity: '0', transform: 'none',
+        transition: 'none', webkitClipPath: 'none', willChange: ''
     });
 
     applyTheme(code);
-    await sleep(CFG.FINAL_HOLD_MS);
+    await sleep(CONFIG.SHOWCASE.FINAL_HOLD);
     await raf(); await raf();
 
-    // glow color
-    const glowHex = THEME[code]?.logo?.glow || CFG.GLOW;
+    const glowHex = THEME[code]?.logo?.glow.color || CONFIG.COLOR.LOGO.GLOW;
     const [gr, gg, gb] = hexToRgbTuple(glowHex);
     document.documentElement.style.setProperty('--glow-rgb', `${gr}, ${gg}, ${gb}`);
 
-    // pick + run
     const name = pickFinalAnimation();
+    STATE.theme = code;
+    STATE.animation = name;
+    LOG.log('Final selection', { theme: code, animation: name });
+
     const dur = Math.round(randFloat(560, 920));
     const distance = randInt(10, 18);
     const scaleFrom = randFloat(0.975, 0.99);
     const blurStart = randFloat(2.5, 3.5);
-
-    if (CFG.DEBUG) console.info('[finalReveal]', name, { dur, distance, scaleFrom, blurStart });
+    LOG.info('[finalReveal] params', { name, dur, distance, scaleFrom, blurStart });
 
     if (prefersReduced && !MOTION_FORCE) {
-        await ANIM.appear(code, imgEl);
+        await ANIMATION.appear(code, imgEl);
     } else {
-        if (name === 'slide') await ANIM.slide(code, imgEl, dur, distance);
-        else if (name === 'scale') await ANIM.scale(code, imgEl, dur, scaleFrom);
-        else if (name === 'blur') await ANIM.blur(code, imgEl, dur, blurStart);
-        else await ANIM[name](code, imgEl, dur);
+        if (name === 'slide') await ANIMATION.slide(code, imgEl, dur, distance);
+        else if (name === 'scale') await ANIMATION.scale(code, imgEl, dur, scaleFrom);
+        else if (name === 'blur') await ANIMATION.blur(code, imgEl, dur, blurStart);
+        else await ANIMATION[name](code, imgEl, dur);
     }
 
-    // glow ping
     imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
 
-    // Lucas sweep
     await sleep(80);
     if ((!prefersReduced || MOTION_FORCE) && boxEl) {
         boxEl.style.setProperty('--logo-url', `url("${imgEl.src}")`);
@@ -328,14 +331,15 @@ async function finalReveal(code) {
 }
 
 // ======================================
-// DEBUG
+// DEBUG (panel — minimal fields)
 // ======================================
 let dbgBuffer = [];
 let dbgTickerId = null;
 const metrics = { start: 0, showcase: 0, t_actions: 0, t_tagline: 0, total: 0 };
+const STATE = { theme: null, animation: null, tagline: false, actions: false, replay: false };
 
 function dbgPush(line) {
-    if (!CFG.DEBUG || !dbgEl) return;
+    if (!CONFIG.DEBUG || !dbgEl) return;
     const now = performance.now() - (metrics.start || 0);
     dbgBuffer.push(`[+${secs(now)}] ${line}`);
     dbgEl.hidden = false;
@@ -344,20 +348,22 @@ function dbgPush(line) {
 }
 
 function dbgStartTicker() {
-    if (!CFG.DEBUG || !dbgEl || dbgTickerId) return;
+    if (!CONFIG.DEBUG || !dbgEl || dbgTickerId) return;
     dbgEl.hidden = false;
 
     dbgTickerId = setInterval(() => {
         const now = performance.now();
-        const total = (metrics.total || now) - (metrics.start || now);
-        const lines = [];
 
-        if (metrics.showcase) lines.push(`Showcase: ${secs(metrics.showcase)}`);
-        if (metrics.t_tagline) lines.push(`Tagline: ${secs(metrics.t_tagline)}`);
-        if (metrics.t_actions) lines.push(`Actions: ${secs(metrics.t_actions)}`);
-        lines.push(`Elapsed: ${secs(total)}`);
+        const l1 = `⏱ Showcase: ${secs(metrics.showcase || (now - (metrics.start || now)))}`;
+        const theme = STATE.theme ? STATE.theme : '—';
+        const anim = STATE.animation ? STATE.animation : '—';
+        const l2 = `🎨 Theme: ${theme}   ·   🎞 Animation: ${anim}`;
+        const l3 =
+            `🗣 Tagline: ${STATE.tagline ? 'shown' : '—'}   ·   ` +
+            `🔘 Actions: ${STATE.actions ? 'shown' : '—'}   ·   ` +
+            `⟲ Replay: ${STATE.replay ? 'visible' : '—'}`;
 
-        dbgEl.textContent = [...dbgBuffer, lines.join('  ·  ')].join('\n');
+        dbgEl.textContent = [l1, l2, l3].join('\n');
         dbgEl.scrollTop = dbgEl.scrollHeight;
     }, 120);
 }
@@ -375,47 +381,56 @@ async function runShowcaseFlow() {
     if (isRunning) return;
     isRunning = true;
 
-    // reset UI
-    if (tagEl) { tagEl.style.opacity = 0; }
+    if (tagEl) tagEl.style.opacity = 0;
     if (actEl) { actEl.classList.remove('show'); actEl.style.opacity = 0; }
-    if (repEl) { repEl.style.opacity = 0; }
+    if (repEl) repEl.style.opacity = 0;
 
-    // reset metrics/debug
     metrics.start = performance.now();
+    LOG.setEpoch(metrics.start);       // anchor logger timestamps to this run
     metrics.showcase = metrics.t_tagline = metrics.t_actions = metrics.total = 0;
-    if (CFG.DEBUG) { dbgBuffer = []; dbgStartTicker(); dbgPush('Flow started'); }
+    Object.assign(STATE, { theme: null, animation: null, tagline: false, actions: false, replay: false });
+
+    if (CONFIG.DEBUG) { dbgBuffer = []; dbgStartTicker(); dbgPush('Flow started'); }
 
     await preloadLogos();
 
     const s0 = performance.now();
     const lastShuffleCode = await shuffleForDuration();
     metrics.showcase = performance.now() - s0;
-    if (CFG.DEBUG) dbgPush(`Showcase done in ${secs(metrics.showcase)}`);
+    LOG.log('Shuffle complete', { duration: secs(metrics.showcase), lastShuffleCode });
+    if (CONFIG.DEBUG) dbgPush(`Showcase done in ${secs(metrics.showcase)}`);
 
     const finalCode = pickRandomDifferent(lastShuffleCode);
+    LOG.log('Picked final theme candidate', { finalCode });
     await finalReveal(finalCode);
 
-    await sleep(CFG.TAGLINE_DELAY_MS);
+    await sleep(CONFIG.SEQUENCE.TAGLINE_DELAY);
     if (tagEl) {
         tagEl.style.transition = 'opacity .35s ease, transform .35s ease';
         tagEl.style.opacity = 1;
         metrics.t_tagline = performance.now() - metrics.start;
-        if (CFG.DEBUG) dbgPush('Tagline shown');
+        STATE.tagline = true;
+        LOG.log('Tagline shown', { at: secs(metrics.t_tagline) });
+        if (CONFIG.DEBUG) dbgPush('Tagline shown');
     }
 
-    await sleep(CFG.ACTION_DELAY_MS);
+    await sleep(CONFIG.SEQUENCE.ACTION_DELAY);
     if (actEl) {
         actEl.style.transition = 'opacity .2s ease';
         actEl.style.opacity = 1;
         actEl.classList.add('show');
         metrics.t_actions = performance.now() - metrics.start;
         metrics.total = metrics.t_actions;
-        if (CFG.DEBUG) dbgPush('Actions shown');
+        STATE.actions = true;
+        LOG.log('Actions shown', { at: secs(metrics.t_actions) });
+        if (CONFIG.DEBUG) dbgPush('Actions shown');
     }
 
-    await sleep(CFG.REPLAY_DELAY_MS);
+    await sleep(CONFIG.SEQUENCE.REPLAY_DELAY);
     if (repEl) repEl.style.opacity = 1;
-    if (CFG.DEBUG) { dbgPush('Replay visible'); dbgStopTicker(); }
+    STATE.replay = true;
+    LOG.log('Replay visible');
+    if (CONFIG.DEBUG) { dbgPush('Replay visible'); dbgStopTicker(); }
 
     isRunning = false;
 }
