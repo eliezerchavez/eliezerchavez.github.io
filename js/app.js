@@ -164,15 +164,42 @@ const ANIM = {
         });
     },
 
-    wipe: async (code, el, dur = 900) => {
-        if (!canClip) return ANIM.fade(code, el, dur);
+    wipe: async (code, el, dur = 900, { bg } = {}) => {
         await ensureLogoSource(code);
-        await transition(el, {
-            dur,
-            from: { opacity: '1', clipPath: 'inset(0 100% 0 0)', webkitClipPath: 'inset(0 100% 0 0)' },
-            props: ['clip-path', '-webkit-clip-path'],
-            to: { clipPath: 'inset(0 0 0 0)', webkitClipPath: 'inset(0 0 0 0)' }
+
+        const host = el.closest('.logo-box') || el.parentElement || document.body;
+        const bgColor = bg || getComputedStyle(document.body).backgroundColor || CFG.BG;
+
+        const curtain = document.createElement('div');
+        Object.assign(curtain.style, {
+            position: 'absolute',
+            // Overscan on all sides to avoid any 1px gap from AA/rounding
+            inset: '-2px -3px -2px -3px',
+            background: bgColor,
+            transform: 'translate3d(0,0,0)',      // force own layer
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            pointerEvents: 'none',
+            zIndex: '2' // under ::after (your z-index:3), above the img
         });
+
+        // Mount fully covering BEFORE we kick off the transition
+        host.appendChild(curtain);
+
+        // Ensure the logo is visible; the curtain hides it
+        el.style.transition = 'none';
+        el.style.opacity = '1';
+
+        // Two RAFs to guarantee paint with covering state
+        await new Promise(r => requestAnimationFrame(r));
+        await new Promise(r => requestAnimationFrame(r));
+
+        // Slide the curtain out with a slight overshoot so no trailing seam remains
+        curtain.style.transition = `transform ${dur}ms ease`;
+        curtain.style.transform = 'translate3d(120%,0,0)';
+
+        await new Promise(r => setTimeout(r, dur + 24));
+        curtain.remove();
     }
 };
 
