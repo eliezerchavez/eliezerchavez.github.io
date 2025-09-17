@@ -2,894 +2,211 @@
 <html lang="en">
 
 <head>
+  <!-- ======================
+       Document basics
+  ======================= -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <title>Eliezer (Eli) Chavez</title>
+  <title>Eliezer (Eli) Chavez | Technology Architect & Strategist</title>
   <meta name="description"
-    content="Cloud & DevOps Leader in AWS, Azure & AI/ML. Digital Transformation Architect helping enterprises scale securely. Credentials included—sarcasm free of charge.">
+        content="Enterprise Architect specializing in Cloud, DevOps & AI/ML. Helping leaders align technology initiatives with business transformation.">
 
+  <!-- ======================
+       Discovery / SEO
+  ======================= -->
+  <link rel="canonical" href="https://eliezerchavez.com/">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="index,follow,max-image-preview:large">
 
+  <!-- ======================
+       Identity / Ownership
+  ======================= -->
+  <link rel="me" href="mailto:hi@eliezerchavez.com">
+  <link rel="me" href="https://www.linkedin.com/in/eliezerchavez/">
+  <link rel="me" href="https://github.com/eliezerchavez">
+
+  <!-- ======================
+       Social sharing (Open Graph / Twitter)
+  ======================= -->
   <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Eliezer (Eli) Chavez">
-  <meta property="og:url" content="https://eliezerchavez.com/">
-  <meta property="og:site_name" content="Eliezer (Eli) Chavez">
   <meta property="og:description"
-    content="Cloud & DevOps Leader | AWS + Azure | AI/ML Strategist | Digital Transformation Architect. Credentials included—sarcasm free of charge.">
+        content="Enterprise Architect specializing in Cloud, DevOps & AI/ML. Helping leaders align technology initiatives with business transformation.">
   <meta property="og:image" content="https://eliezerchavez.com/img/og-preview.png">
-  <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="Eliezer (Eli) Chavez">
+  <meta property="og:title" content="Eliezer (Eli) Chavez | Technology Architect & Strategist">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://eliezerchavez.com/">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Eliezer (Eli) Chavez">
   <meta name="twitter:description"
-    content="Cloud & DevOps Leader (AWS + Azure) helping enterprises scale securely. Credentials included—sarcasm free of charge.">
-  <meta name="twitter:image" content="https://eliezerchavez.com/img/og-preview.png"> <!-- can reuse OG -->
+        content="Enterprise Architect specializing in Cloud, DevOps & AI/ML. Helping leaders align technology initiatives with business transformation.">
+  <meta name="twitter:image" content="https://eliezerchavez.com/img/og-preview.png">
+  <meta name="twitter:title" content="Eliezer (Eli) Chavez | Technology Architect & Strategist">
 
-  <!-- Chrome/Safari UI color -->
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+  <!-- ======================
+       Appearance (UI theme)
+  ======================= -->
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#002E6D">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
 
-  <!-- Favicons -->
-  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
-  <link rel="icon" type="image/png" href="/img/favicon-96x96.png" sizes="96x96">
-  <link rel="shortcut icon" href="/img/favicon.ico">
+  <!-- ======================
+       PWA / Icons
+  ======================= -->
   <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content=">EC" />
+  <link rel="icon" type="image/png" href="/img/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
   <link rel="manifest" href="/img/site.webmanifest">
+  <link rel="shortcut icon" href="/img/favicon.ico">
 
-  <!-- Canonical & robots -->
-  <link rel="canonical" href="https://eliezerchavez.com/">
-  <meta name="robots" content="index, follow">
+  <!-- ======================
+       Performance hints
+  ======================= -->
+  <!-- Preload your CSS first paint and custom font -->
+  <link rel="preload" href="/css/main.css" as="style">
+  <link rel="preload" href="/fonts/delight-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Preconnect for icon CDN -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
+  <!-- ======================
+       CSS / Libraries
+  ======================= -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- ======================
+       No-FOUC boot helpers
+  ======================= -->
+  <script>
+    document.documentElement.classList.add('js');
+  </script>
+  <noscript>
+    <style>
+      /* minimal fallback so logo/tagline are visible without transitions */
+      #logo {
+        opacity: 1 !important;
+      }
+
+      .tagline,
+      .actions {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    </style>
+  </noscript>
+
+  <!-- ======================
+       Structured data (JSON-LD)
+  ======================= -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Eliezer (Eli) Chavez",
     "url": "https://eliezerchavez.com",
-    "jobTitle": "Cloud & DevOps Leader | AWS + Azure | AI/ML Strategist | Digital Transformation Architect",
-    "description": "Cloud & DevOps Leader in AWS, Azure & AI/ML. Digital Transformation Architect helping enterprises scale securely. Credentials included—sarcasm free of charge.",
+    "jobTitle": "Technology Architect & Strategist",
+    "description": "Enterprise Architect specializing in Cloud, DevOps & AI/ML. Helping leaders align technology initiatives with business transformation.",
+    "email": "hi@eliezerchavez.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New York City Metropolitan Area",
+      "addressCountry": "US"
+    },
+    "alumniOf": { "@type": "EducationalOrganization", "name": "Universidad 'Alejandro de Humboldt'" },
+    "contactPoint": [{ "@type": "ContactPoint", "email": "hi@eliezerchavez.com", "contactType": "business" }],
     "sameAs": [
       "https://www.linkedin.com/in/eliezerchavez/",
       "https://github.com/eliezerchavez",
       "https://instagram.com/eliezerchavez"
     ],
-    "worksFor": {
-      "@type": "Organization",
-      "name": "NTT DATA Europe & Latam"
-    },
-    "alumniOf": {
-      "@type": "EducationalOrganization",
-      "name": "Universidad 'Alejandro de Humboldt'"
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "New York City Metropolitan Area",
-      "addressCountry": "USA"
-    }
+    "worksFor": { "@type": "Organization", "name": "NTT DATA Europe & Latam" },
+    "knowsAbout": [
+      "Cloud Architecture (AWS, Azure, GCP, OCI)",
+      "DevOps & Platform Engineering",
+      "Kubernetes & Containers",
+      "Enterprise Architecture",
+      "AI/ML strategy"
+    ]
   }
   </script>
-
-  <!-- Font Awesome (icons) -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer">
-
-  <!-- <link rel="preload" href="/fonts/delight-regular.woff2" as="font" type="font/woff2" crossorigin> -->
-
-  <style>
-    :root {
-      --tag-fg: #002E6D;
-      --btn-fg: #002E6D;
-      --btn-size: clamp(40px, 5.5vw, 56px);
-      --btn-radius: 12px;
-      --icon-size: calc(var(--btn-size) * 0.44);
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-    }
-
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color .2s ease;
-    }
-
-    @font-face {
-      font-family: 'Delight Regular';
-      src: url(/fonts/delight-regular.woff2) format('woff2');
-      font-display: swap;
-    }
-
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      height: 100%;
-    }
-
-    .logo-box {
-      width: clamp(220px, 40vw, 76vmin);
-      max-height: 80vh;
-      aspect-ratio: 3 / 1.2;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: visible;
-    }
-
-    .logo-box::after {
-      content: "";
-      position: absolute;
-      inset: -6% -10%;
-      /* extend outside to avoid edge clipping */
-      background-image: var(--logo-url, none);
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-      pointer-events: none;
-      z-index: 3;
-
-      /* Make it bloom when visible */
-      filter: brightness(2) contrast(1.05) blur(2px);
-      mix-blend-mode: screen;
-      /* adds that cinematic bloom on light BGs */
-      opacity: 0;
-      /* off until animated */
-
-      /* The moving band mask (WebKit + standard) */
-      -webkit-mask-image: linear-gradient(90deg,
-          transparent 0%,
-          rgba(0, 0, 0, 0.0) 42%,
-          rgba(0, 0, 0, 1.0) 48%,
-          rgba(0, 0, 0, 1.0) 52%,
-          rgba(0, 0, 0, 0.0) 58%,
-          transparent 100%);
-      mask-image: linear-gradient(90deg,
-          transparent 0%,
-          rgba(0, 0, 0, 0.0) 42%,
-          rgba(0, 0, 0, 1.0) 48%,
-          rgba(0, 0, 0, 1.0) 52%,
-          rgba(0, 0, 0, 0.0) 58%,
-          transparent 100%);
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-      -webkit-mask-size: 220% 100%;
-      /* oversize so it can traverse fully */
-      mask-size: 220% 100%;
-      -webkit-mask-position: -110% 0%;
-      /* start fully left */
-      mask-position: -110% 0%;
-    }
-
-    #logo {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      -webkit-user-drag: none;
-      user-select: none;
-      transition: opacity .18s ease, transform .18s ease;
-      opacity: 1;
-    }
-
-    @keyframes logoGlow {
-      0% {
-        filter: drop-shadow(0 0 0 rgba(var(--glow-rgb, 255, 255, 255), 0));
-      }
-
-      40% {
-        filter: drop-shadow(0 0 14px rgba(var(--glow-rgb, 255, 255, 255), .38));
-      }
-
-      100% {
-        filter: drop-shadow(0 0 0 rgba(var(--glow-rgb, 255, 255, 255), 0));
-      }
-    }
-
-    @keyframes lucasSweep {
-      0% {
-        opacity: 0;
-        -webkit-mask-position: -110% 0%;
-        mask-position: -110% 0%;
-      }
-
-      5% {
-        opacity: .9;
-      }
-
-      50% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 0;
-        -webkit-mask-position: 110% 0%;
-        mask-position: 110% 0%;
-      }
-    }
-
-    .logo-glow {
-      animation: logoGlow 900ms ease-out 1;
-    }
-
-    .logo-box.lucas::after {
-      animation: lucasSweep var(--lucas-sweep-ms, 1200ms) ease-out 1;
-    }
-
-    .tagline {
-      align-self: stretch;
-      /* make sure it spans full width of wrapper */
-      margin-top: 12px;
-      font-family: "Delight Regular", "Inter", system-ui, sans-serif;
-      font-weight: 300;
-      font-size: clamp(20px, 2.8vw, 32px);
-      color: var(--tag-fg);
-      opacity: 0;
-      text-align: right;
-      /* text hugs the right edge */
-      transform: translateY(6px);
-      transition: opacity .35s ease, transform .35s ease;
-    }
-
-    .actions {
-      align-self: stretch;
-      /* span full width of wrapper */
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      /* buttons sit on the right */
-      margin-top: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease;
-    }
-
-    .actions.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    @media (max-width: 600px) {
-      .wrapper {
-        align-items: center;
-      }
-
-      .tagline {
-        text-align: center;
-      }
-
-      .actions {
-        justify-content: center;
-      }
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--btn-size);
-      height: var(--btn-size);
-      border-radius: var(--btn-radius);
-      background: #fff;
-      color: var(--btn-fg);
-      text-decoration: none;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
-    }
-
-    .btn i {
-      font-size: var(--icon-size);
-      line-height: 1;
-    }
-
-    .replay {
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      width: 32px;
-      height: 32px;
-      border: 0;
-      border-radius: 10px;
-      background: #fff;
-      color: var(--btn-fg);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
-      display: inline-grid;
-      opacity: 0;
-      place-items: center;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .btn:focus-visible,
-    .replay:focus-visible {
-      outline: 2px solid var(--btn-fg);
-      outline-offset: 3px;
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-fg) 25%, transparent);
-    }
-
-    .debug {
-      position: fixed;
-      left: 14px;
-      bottom: 14px;
-      z-index: 1000;
-      min-width: 200px;
-      max-width: 50vw;
-
-      font: 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      color: #fff;
-      background: rgba(0, 0, 0, .65);
-      border-radius: 10px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
-      padding: 8px 10px;
-      backdrop-filter: blur(2px);
-
-      max-height: calc(1.35em * 2 + 12px);
-      overflow-y: auto;
-      white-space: pre-line;
-      scrollbar-gutter: stable both-edges;
-    }
-
-    .debug h2 {
-      display: none;
-    }
-
-    .debug .kv {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 4px 10px;
-    }
-
-    .debug dt {
-      opacity: .85;
-    }
-
-    .debug dd {
-      margin: 0;
-    }
-  </style>
 </head>
 
 <body>
   <div class="wrapper">
+    <!-- ======================
+         Core content
+    ======================= -->
     <!-- Logo -->
     <div class="logo-box">
-      <img id="logo" alt=">EC" decoding="async" fetchpriority="high"
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" />
+      <img id="logo"
+           alt=">EC"
+           decoding="async"
+           fetchpriority="high"
+           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" />
     </div>
 
     <!-- Tagline -->
     <div id="tagline" class="tagline">less stress, more success!</div>
 
-    <!-- Actions -->
-    <nav class="actions" id="actions" aria-label="Quick contact">
-      <a class="btn" href="mailto:hi@eliezerchavez.com" title="Email Eli (opens mail app)" aria-label="Email Eli">
+    <!-- ======================
+         Navigation / Actions
+    ======================= -->
+    <nav id="actions" class="actions" aria-label="Quick contact">
+      <a class="btn"
+         href="mailto:hi@eliezerchavez.com"
+         aria-label="Email Eli"
+         title="Email Eli (opens mail app)">
         <i class="fa-solid fa-envelope"></i>
       </a>
-      <a class="btn" href="https://www.linkedin.com/in/eliezerchavez/" target="_blank" rel="noopener"
-        title="LinkedIn (opens in new tab)" aria-label="LinkedIn">
+
+      <a class="btn"
+         href="https://www.linkedin.com/in/eliezerchavez/"
+         target="_blank"
+         rel="noopener"
+         aria-label="LinkedIn"
+         title="LinkedIn (opens in new tab)">
         <i class="fa-brands fa-linkedin-in"></i>
       </a>
+
       <!-- Add GitHub back any time
-      <a class="btn" href="https://github.com/eliezerchavez" target="_blank" rel="noopener"
-         aria-label="GitHub (Opens in a new tab.)" title="GitHub • Opens in a new tab.">
+      <a class="btn"
+         href="https://github.com/eliezerchavez"
+         target="_blank"
+         rel="noopener"
+         aria-label="GitHub"
+         title="GitHub (opens in new tab)">
         <i class="fa-brands fa-github"></i>
       </a>
       -->
     </nav>
 
+    <!-- ======================
+         Utilities
+    ======================= -->
+    <!-- Debug panel -->
+    <aside id="debugBox" class="debug" hidden aria-hidden="true"></aside>
+
     <!-- Replay button -->
-    <button id="replay" class="replay" aria-label="Replay intro (press R)" title="Replay (R)" type="button">
+    <button id="replay"
+            class="replay"
+            type="button"
+            aria-label="Replay intro (press R)"
+            title="Replay (R)">
       <i class="fa-solid fa-rotate-right"></i>
     </button>
-
-    <aside id="debugBox" class="debug" hidden aria-hidden="true"></aside>
   </div>
 
-  <script>
-    // =========================
-    // STEP 0 — DOM & CONFIG
-    // =========================
-    const imgEl = document.getElementById('logo');
-    const tagEl = document.getElementById('tagline');
-    const actEl = document.getElementById('actions');
-    const repEl = document.getElementById('replay');
-    const dbgEl = document.getElementById('debugBox');
-
-    const qs = new URLSearchParams(window.location.search); // Grab the query string from the current URL
-
-    // Respect reduced motion
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Showcase timing
-    const COLOR = '#002E6D';
-    const BACKGROUND_COLOR = '#FFFFFF';
-    const GLOW_COLOR = '#1D252C'; // default glow color (overridden per theme)
-    const TARGET_MS = 3000;   // total shuffle duration (X ms)
-    const FRAME_MS = 100;     // minimum time each logo stays visible (per frame)
-    const FINAL_HOLD_MS = 700; // Pause before revealing the final logo
-    const TAGLINE_DELAY_MS = 250; // pause between showcase and tagline
-    const ACTION_DELAY_MS = 500; // pause between tagline and action buttons
-    const REPLAY_DELAY_MS = 1000; // pause between action buttons and replay button
-    const DEBUG = (qs.has('debug') && qs.get('debug') !== '0' && qs.get('debug') !== 'false') || false;
-    const ANIMATION_OVERRIDE = (qs.get('animation') || '').toLowerCase();
-    const MOTION_FORCE =
-      ['force', 'on', '1', 'true', 'yes'].includes((qs.get('motion') || '').toLowerCase())
-      || !!ANIMATION_OVERRIDE;
-    if (DEBUG) console.info('[motion]', { prefersReduced, MOTION_FORCE, ANIMATION_OVERRIDE });
-
-
-
-    // Helper: feature test for clip-path
-    const canClip = typeof CSS !== 'undefined' && (
-      CSS.supports('clip-path', 'inset(0 0 0 0)') ||
-      CSS.supports('-webkit-clip-path', 'inset(0 0 0 0)')
-    );
-
-    const STYLE = {
-      "COL-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
-      "COL-02": { logo: { bg: "#002E6D", glow: "#FFFFFF" }, button: { fg: "#002E6D" }, tagline: { fg: "#FFFFFF" } },
-      "GRS-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#1D252C" }, tagline: { fg: "#1D252C" } },
-      "GRS-02": { logo: { bg: "#1D252C", glow: "#FFFFFF" }, button: { fg: "#1D252C" }, tagline: { fg: "#FFFFFF" } },
-      "NEG-01": { logo: { bg: "#1D252C", glow: "#FFFFFF" }, button: { fg: "#1D252C" }, tagline: { fg: "#FFFFFF" } },
-      "OUT-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#1D252C" }, tagline: { fg: "#1D252C" } },
-      "POS-01": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#002E6D" }, tagline: { fg: "#002E6D" } },
-      "POS-02": { logo: { bg: "#FFFFFF", glow: "#1D252C" }, button: { fg: "#00C4B3" }, tagline: { fg: "#00C4B3" } }
-    };
-
-    /*
-     * 
-     */
-    const ANIMATION = {
-      fade: async (code, el, dur = 600) => {
-        await ensureLogoSource(code);
-        await transition(el, {
-          from: { opacity: '0' },
-          to: { opacity: '1' },
-          dur, props: ['opacity']
-        });
-      },
-
-      wipe: async (code, el, dur = 900) => {
-        if (!canClip) return ANIMATION.fade(code, el, dur);
-        await ensureLogoSource(code);
-        await transition(el, {
-          from: { opacity: '1', clipPath: 'inset(0 100% 0 0)', webkitClipPath: 'inset(0 100% 0 0)' },
-          to: { clipPath: 'inset(0 0 0 0)', webkitClipPath: 'inset(0 0 0 0)' },
-          dur, props: ['clip-path', '-webkit-clip-path']
-        });
-      },
-
-      slide: async (code, el, dur = 700, distance = 14) => {
-        await ensureLogoSource(code);
-        await transition(el, {
-          from: { opacity: '1', transform: `translateY(${distance}px)` },
-          to: { transform: 'translateY(0)' },
-          dur, props: ['transform']
-        });
-      },
-
-      scale: async (code, el, dur = 650, fromScale = 0.985) => {
-        await ensureLogoSource(code);
-        await transition(el, {
-          from: { opacity: '1', transform: `scale(${fromScale})` },
-          to: { transform: 'scale(1)' },
-          dur, props: ['transform']
-        });
-      },
-
-      blur: async (code, el, dur = 750, startBlur = 3) => {
-        await ensureLogoSource(code);
-        await transition(el, {
-          from: { opacity: '1', filter: `blur(${startBlur}px)` },
-          to: { filter: 'blur(0px)' },
-          dur, props: ['filter']
-        });
-      }
-    };
-
-    /*
-     *
-     */
-    function setStyle(el, obj) { for (const k in obj) el.style[k] = obj[k]; }
-
-    const raf = () => new Promise(r => requestAnimationFrame(r));
-
-    async function transition(el, { from = {}, to = {}, dur = 600, ease = 'ease', props = [] }) {
-      el.style.transition = 'none';
-      setStyle(el, from);
-      await raf(); await raf();                               // (1) lock in the "from" styles
-
-      el.style.transition = props.length
-        ? props.map(p => `${p} ${dur}ms ${ease}`).join(', ')
-        : `all ${dur}ms ${ease}`;                             // (2) arm the transition
-
-      setStyle(el, to);                                       // (3) change styles → triggers CSS transition
-      await new Promise(r => setTimeout(r, dur + 20));        // (4) wait for it to finish (dur + small buffer)
-      el.style.transition = 'none';                           // (5) disarm to avoid animating future tweaks
-    }
-
-    /*
-     *
-     */
-
-
-    function getImageSrc(code) {
-      if (!code) return null;
-      return '/img/' + code.toLowerCase() + '.svg';
-    }
-
-    // Metrics container (set in runShowcaseFlow)
-    let metrics = { start: 0, showcase: 0, t_tagline: 0, t_actions: 0, total: 0 };
-
-    function fmt(ms) {
-      // Pretty print milliseconds as e.g. "1.23s" or "85ms"
-      if (ms < 1000) return `${Math.round(ms)}ms`;
-      return `${(ms / 1000).toFixed(2)}s`;
-    }
-
-    function fmtRaw(ms) {
-      return (ms / 1000).toFixed(2) + 's';
-    }
-
-    async function animAppear(code) {
-      await ensureLogoSource(code);
-      imgEl.style.transition = 'none';
-      imgEl.style.opacity = '1';
-    }
-
-    function buildDebugHTML() {
-      return `
-    <h2>DEBUG</h2>
-    <dl class="kv">
-      <dt>Logo showcase</dt><dd>${fmt(metrics.showcase)}</dd>
-      <dt>Tagline at</dt><dd>${fmt(metrics.t_tagline)}</dd>
-      <dt>Actions at</dt><dd>${fmt(metrics.t_actions)}</dd>
-      <dt>Total elapsed</dt><dd>${fmt(metrics.total || (performance.now() - metrics.start))}</dd>
-    </dl>
-  `;
-    }
-
-    function updateDebug(mode) {
-      if (!DEBUG || !dbgEl) return;
-      dbgEl.hidden = false;
-      if (mode === 'reset') {
-        dbgEl.innerHTML = buildDebugHTML();
-      } else {
-        dbgEl.innerHTML = buildDebugHTML();
-      }
-    }
-
-    function hexToRgbTuple(hex) {
-      if (!hex) return [255, 255, 255];
-      let h = hex.replace('#', '').trim();
-      if (h.length === 3) h = h.split('').map(c => c + c).join('');
-      const int = parseInt(h, 16);
-      return [(int >> 16) & 255, (int >> 8) & 255, int & 255];
-    }
-
-    // --- Random helpers ---
-    function randFloat(min, max) { return Math.random() * (max - min) + min; }
-    function randInt(min, max) { return Math.floor(randFloat(min, max + 1)); }
-
-    // Keep the last animation to avoid immediate repeats
-    let _lastAnim = null;
-    let _lastAnimation = null;
-
-    // =========================
-    // STEP 1 — PRELOAD LOGOS
-    // =========================
-    function preloadLogos(timeoutMs = 300) {
-      const codes = Object.keys(STYLE);
-
-      // Hints via <link rel="preload"> + actual Image() loads
-      const hints = codes.map(code => new Promise(resolve => {
-        const src = getImageSrc(code);
-        if (!src) return resolve();
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = src;
-        link.onload = link.onerror = resolve;
-        document.head.appendChild(link);
-      }));
-
-      const loads = codes.map(code => new Promise(resolve => {
-        const src = getImageSrc(code);
-        if (!src) return resolve();
-        const im = new Image();
-        im.onload = im.onerror = resolve;
-        im.src = src;
-      }));
-
-      // Don’t block forever — race with a short timeout
-      return Promise.race([
-        Promise.all([...hints, ...loads]),
-        new Promise(r => setTimeout(r, timeoutMs))
-      ]);
-    }
-
-    // =========================
-    // STEP 2 — RANDOM PICK (no immediate repeats)
-    // =========================
-    function pickRandomDifferent(prev) {
-      const codes = Object.keys(STYLE);
-      if (codes.length <= 1) return codes[0];
-      let code;
-      do {
-        code = codes[Math.floor(Math.random() * codes.length)];
-      } while (code === prev);
-      return code;
-    }
-
-    // =========================
-    // Helpers: theme + instant swap
-    // =========================
-    function applyTheme(code) {
-      const item = STYLE[code];
-      if (!item) return;
-
-      // Set page BG and button color (CSS var) from map
-      document.body.style.backgroundColor = item.logo?.bg || BACKGROUND_COLOR;
-      document.documentElement.style.setProperty('--tag-fg', item.tagline?.fg || COLOR);
-      document.documentElement.style.setProperty('--btn-fg', item.button?.fg || COLOR);
-    }
-
-    async function showInstant(code) {
-      const item = STYLE[code];
-      if (!item) return;
-      applyTheme(code);
-
-      const nextSrc = getImageSrc(code);
-      if (nextSrc) {
-        // Set even if same — cheap and avoids relative/absolute URL mismatch issues
-        imgEl.src = nextSrc;
-        if (imgEl.decode) { try { await imgEl.decode(); } catch { } }
-      }
-    }
-
-    async function ensureLogoSource(code) {
-      const nextSrc = getImageSrc(code);
-      if (nextSrc && imgEl.src !== nextSrc) {
-        imgEl.src = nextSrc;
-        if (imgEl.decode) { try { await imgEl.decode(); } catch { } }
-      }
-    }
-
-    function pickFinalAnimation() {
-      if (ANIMATION_OVERRIDE && ANIMATION[ANIMATION_OVERRIDE]) {
-        _lastAnimation = ANIMATION_OVERRIDE;
-        return ANIMATION_OVERRIDE;
-      }
-
-      const pool = ['fade', ...(canClip ? ['wipe'] : []), 'slide', 'scale', 'blur'];
-
-      // Try to avoid immediate repetition
-      if (_lastAnimation) {
-        const notLast = pool.filter(name => name !== _lastAnimation); // <-- array
-        if (notLast.length) {
-          const next = notLast[Math.floor(Math.random() * notLast.length)];
-          _lastAnimation = next;
-          return next;
-        }
-      }
-
-      // Fallback random
-      const next = pool[Math.floor(Math.random() * pool.length)];
-      _lastAnimation = next;
-      return next;
-    }
-
-    async function finalReveal(code) {
-      //reset state
-      setStyle(imgEl, { transition: 'none', opacity: '0', transform: 'none', filter: 'none', clipPath: 'none', webkitClipPath: 'none', willChange: '' });
-      applyTheme(code);
-      await sleep(FINAL_HOLD_MS);
-      await raf(); await raf(); // guarantee pre-state is committed
-
-      // glow color
-      const glowHex = STYLE[code]?.logo?.glow || GLOW_COLOR;
-      const [gr, gg, gb] = hexToRgbTuple(glowHex);
-      document.documentElement.style.setProperty('--glow-rgb', `${gr}, ${gg}, ${gb}`);
-
-      // choose + run
-      const animationName = pickFinalAnimation();
-      const dur = Math.round(randFloat(560, 920));
-      const distance = randInt(10, 18);
-      const scaleFrom = randFloat(0.975, 0.99);
-      const blurStart = randFloat(2.5, 3.5);
-      if (DEBUG) console.info('[finalReveal]', animationName, { dur, distance, scaleFrom, blurStart });
-
-      if (prefersReduced && !MOTION_FORCE) {
-        await animAppear(code);
-      } else {
-        if (animationName === 'slide') await ANIMATION.slide(code, imgEl, dur, distance);
-        else if (animationName === 'scale') await ANIMATION.scale(code, imgEl, dur, scaleFrom);
-        else if (animationName === 'blur') await ANIMATION.blur(code, imgEl, dur, blurStart);
-        else await ANIMATION[animationName](code, imgEl, dur);
-      }
-
-      // start glow once
-      imgEl.classList.remove('logo-glow'); void imgEl.offsetWidth; imgEl.classList.add('logo-glow');
-
-      // Lucas sweep
-      await sleep(80);
-      const boxEl = document.querySelector('.logo-box');
-      if (!prefersReduced || MOTION_FORCE) {
-        boxEl?.style.setProperty('--logo-url', `url("${imgEl.src}")`);
-        boxEl?.classList.remove('lucas'); void boxEl?.offsetWidth;
-        boxEl?.style.setProperty('--lucas-sweep-ms', '1200ms');
-        boxEl?.classList.add('lucas');
-      }
-    }
-
-    const sleep = (ms) =>
-      new Promise((resolve) =>
-        (globalThis.setTimeout || window.setTimeout).call(globalThis, resolve, ms)
-      );
-
-    // =========================
-    // STEP 3 — DISPLAY SHUFFLE FOR A DURATION
-    // =========================
-    async function shuffleForDuration(totalMs = TARGET_MS, frameMs = FRAME_MS) {
-      let last = null;
-      const start = performance.now();
-
-      while (performance.now() - start < totalMs) {
-        const code = pickRandomDifferent(last);
-
-        const frameStart = performance.now();
-        await showInstant(code);
-        last = code;
-
-        // Keep each frame on screen at least frameMs
-        const elapsed = performance.now() - frameStart;
-        const wait = Math.max(0, frameMs - elapsed);
-        if (wait > 0) await sleep(wait);
-      }
-      return last; // return whichever logo ended last
-    }
-
-    async function runShowcaseFlow() {
-
-      // Reset visibility
-      if (tagEl) tagEl.style.opacity = 0;
-      if (actEl) {
-        actEl.classList.remove('show');
-        actEl.style.opacity = 0;
-      }
-      if (repEl) repEl.style.opacity = 0;
-
-      metrics = { start: performance.now(), showcase: 0, t_tagline: 0, t_actions: 0, total: 0 };
-      if (DEBUG) { dbgBuffer = []; dbgStartTicker(); dbgPush('Flow started'); }
-
-      await preloadLogos();
-      const s0 = performance.now();
-      const lastShuffleCode = await shuffleForDuration();
-      const s1 = performance.now();
-      metrics.showcase = s1 - s0;
-      if (DEBUG) dbgPush(`Showcase done in ${fmt(metrics.showcase)}`);
-
-      // Choose a final code that's different from the last shuffle frame
-      const finalCode = pickRandomDifferent(lastShuffleCode);
-
-      await finalReveal(finalCode);
-
-      await sleep(TAGLINE_DELAY_MS);
-      if (tagEl) {
-        tagEl.style.transition = 'opacity .35s ease, transform .35s ease';
-        tagEl.style.opacity = 1;
-
-        metrics.t_tagline = performance.now() - metrics.start;
-        if (DEBUG) dbgPush('Tagline shown');
-      }
-
-      await sleep(ACTION_DELAY_MS);
-      if (actEl) {
-        actEl.style.transition = 'opacity .2s ease';
-        actEl.style.opacity = 1;
-        actEl.classList.add('show');
-
-        metrics.t_actions = performance.now() - metrics.start;
-        metrics.total = metrics.t_actions;
-        if (DEBUG) dbgPush('Actions shown');
-      }
-
-      await sleep(REPLAY_DELAY_MS);
-      if (repEl) {
-        repEl.style.opacity = 1;
-      }
-      if (DEBUG) { dbgPush('Replay visible'); dbgStopTicker(); }
-    }
-
-    // =========================
-    if (repEl) {
-      repEl.addEventListener('click', () => runShowcaseFlow());
-    }
-
-    document.addEventListener('keydown', (e) => {
-      const tag = document.activeElement?.tagName;
-      const isField = /^(A|BUTTON|INPUT|TEXTAREA|SELECT)$/.test(tag);
-      if (isField) return; // don't hijack keys when a control is focused
-
-      if (e.key === 'r' || e.key === 'R') runShowcaseFlow();
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runShowcaseFlow(); }
-    });
-    // =========================
-    // BOOT — run the 3 steps
-    // (Optionally reveal tagline/actions after)
-    // =========================
-    document.addEventListener('DOMContentLoaded', async () => {
-      // await preloadLogos();          // Step 1
-      // await shuffleForDuration();    // Steps 2 & 3
-
-      // // Optional reveal after the shuffle
-      // if (tagEl) {
-      //   tagEl.style.transition = 'opacity .5s ease';
-      //   tagEl.style.opacity = 1;
-      // }
-      // if (actEl) {
-      //   actEl.style.transition = 'opacity .5s ease';
-      //   actEl.style.opacity = 1;
-      // }
-      // if (repEl) {
-      //   repEl.style.transition = 'opacity .5s ease';
-      //   repEl.style.opacity = 1;
-      // }
-      runShowcaseFlow();
-    });
-
-    // --- DEBUG LOGGING --- //
-    let dbgBuffer = [];
-
-    function dbgPush(line) {
-      if (!DEBUG || !dbgEl) return;
-      const now = Math.round(performance.now() - (metrics.start || 0));
-      dbgBuffer.push(`[+${fmtRaw(now)}] ${line}`);
-      dbgEl.hidden = false;
-      dbgEl.textContent = dbgBuffer.join('\n');
-      dbgEl.scrollTop = dbgEl.scrollHeight; // keep view pinned to latest
-    }
-
-    // Live ticker that displays current elapsed values while flow runs
-    let dbgTickerId = null;
-    function dbgStartTicker() {
-      if (!DEBUG || !dbgEl) return;
-      if (dbgTickerId) return;
-      dbgEl.hidden = false;
-
-      dbgTickerId = setInterval(() => {
-        const now = performance.now();
-        const total = Math.round((metrics.total || now) - (metrics.start || now));
-        const lines = [];
-
-        if (metrics.showcase) lines.push(`Showcase: ${fmt(metrics.showcase)}`);
-        if (metrics.t_tagline) lines.push(`Tagline: ${fmt(metrics.t_tagline)}`);
-        if (metrics.t_actions) lines.push(`Actions: ${fmt(metrics.t_actions)}`);
-        lines.push(`Elapsed: ${fmt(total)}`);
-
-        // render the full log + a live status line at the end
-        const statusBlock = lines.join('  ·  ');
-        dbgEl.textContent = [...dbgBuffer, statusBlock].join('\n');
-        dbgEl.scrollTop = dbgEl.scrollHeight; // keep it scrolled
-      }, 120);
-    }
-
-    function dbgStopTicker() {
-      if (dbgTickerId) {
-        clearInterval(dbgTickerId);
-        dbgTickerId = null;
-      }
-    }
-  </script>
+  <!-- ======================
+       Scripts
+  ======================= -->
+  <script src="/js/app.js" defer></script>
 </body>
 
 </html>
