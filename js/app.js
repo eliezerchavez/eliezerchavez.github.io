@@ -36,8 +36,54 @@ const CONFIG = {
     DEBUG: (qs.has('debug') && !['0', 'false'].includes(qs.get('debug')?.toLowerCase()))
 };
 
+// ======================================
+// RUNTIME STORE
+// ======================================
+const RUNTIME = {
+    theme: '—',          // final theme code
+    animation: '—',      // final animation name
+    times: {
+        start: 0,          // perf.now() at run start
+        showcase: 0,       // ms (duration of shuffle)
+        tagline: null,     // ms since start when shown
+        actions: null,     // ms since start when shown
+        replay: null,      // ms since start when visible
+        total: 0           // ms since start (last milestone)
+    },
+    events: []           // [{name, t, sinceStart, data?}, ...]
+};
+
+function rtReset() {
+    RUNTIME.theme = '—';
+    RUNTIME.animation = '—';
+    RUNTIME.times = {
+        start: performance.now(),
+        showcase: 0,
+        tagline: null,
+        actions: null,
+        replay: null,
+        total: 0
+    };
+    RUNTIME.events.length = 0;
+}
+
+// Generic milestone recorder (and optional console event)
+function mark(name, data) {
+    const t = performance.now();
+    const sinceStart = t - (RUNTIME.times.start || t);
+    RUNTIME.times[name] = sinceStart;
+    RUNTIME.times.total = sinceStart;
+
+    const evt = { name, t, sinceStart, ...(data ? { data } : {}) };
+    RUNTIME.events.push(evt);
+
+    // forward to your console logger if present (supports either LOG or log)
+    if (window.LOG?.info) window.LOG.info(`event:${name}`, evt);
+    if (window.log?.event) window.log.event(name, evt);
+}
+
 // wire logger now that CONFIG is known
-LOG.setEnabled(CONFIG.DEBUG || ['log', 'trace', 'verbose'].includes((qs.get('log') || '').toLowerCase()));
+window.LOG?.setEnabled?.(CONFIG.DEBUG || ['log', 'trace', 'verbose'].includes((qs.get('log') || '').toLowerCase()));
 
 // ======================================
 // CAPABILITIES
@@ -209,7 +255,7 @@ const ANIMATION = {
 };
 
 // Auto-wrap all animation functions for console tracing
-LOG.wrapMethods(ANIMATION, 'ANIMATION');
+window.LOG?.wrapMethods?.(ANIMATION, 'ANIMATION');
 
 // ======================================
 // PICKERS
@@ -244,7 +290,7 @@ function pickFinalAnimation() {
 // FLOW HELPERS
 // ======================================
 async function preloadLogos(timeoutMs = 300) {
-    return LOG.timeAsync('preloadLogos', async () => {
+    return (window.LOG?.timeAsync ? LOG.timeAsync('preloadLogos', async () => {
         const codes = Object.keys(THEME);
 
         const hints = codes.map(code => new Promise(resolve => {
@@ -265,7 +311,7 @@ async function preloadLogos(timeoutMs = 300) {
         }));
 
         return Promise.race([Promise.all([...hints, ...loads]), new Promise(r => setTimeout(r, timeoutMs))]);
-    });
+    }) : (async () => { /* same body */ /* ... */ })());
 }
 
 async function shuffleForDuration(totalMs = CONFIG.SHOWCASE.DURATION, frameMs = CONFIG.SHOWCASE.FRAME_MIN) {
@@ -300,9 +346,11 @@ async function finalReveal(code) {
     document.documentElement.style.setProperty('--glow-rgb', `${gr}, ${gg}, ${gb}`);
 
     const name = pickFinalAnimation();
-    STATE.theme = code;
-    STATE.animation = name;
-    LOG.log('Final selection', { theme: code, animation: name });
+    RUNTIME.animation = name;
+    window.LOG?.info?.('animation.selected', { animation: name });
+    window.log?.info?.('animation.selected', { animation: name });
+    mark('animation', { animation: name });
+    dbgPush(`Animation: ${name}`);
 
     const dur = Math.round(randFloat(560, 920));
     const distance = randInt(10, 18);
@@ -335,42 +383,23 @@ async function finalReveal(code) {
 // ======================================
 let dbgBuffer = [];
 let dbgTickerId = null;
-const metrics = { start: 0, showcase: 0, t_actions: 0, t_tagline: 0, total: 0 };
-const STATE = { theme: null, animation: null, tagline: false, actions: false, replay: false };
 
 function dbgPush(line) {
     if (!CONFIG.DEBUG || !dbgEl) return;
-    const now = performance.now() - (metrics.start || 0);
+    const now = performance.now() - (RUNTIME.start || 0);
     dbgBuffer.push(`[+${secs(now)}] ${line}`);
     dbgEl.hidden = false;
     dbgEl.textContent = dbgBuffer.join('\n');
     dbgEl.scrollTop = dbgEl.scrollHeight;
 }
 
-function dbgStartTicker() {
-    if (!CONFIG.DEBUG || !dbgEl || dbgTickerId) return;
-    dbgEl.hidden = false;
-
-    dbgTickerId = setInterval(() => {
-        const now = performance.now();
-
-        const l1 = `⏱ Showcase: ${secs(metrics.showcase || (now - (metrics.start || now)))}`;
-        const theme = STATE.theme ? STATE.theme : '—';
-        const anim = STATE.animation ? STATE.animation : '—';
-        const l2 = `🎨 Theme: ${theme}   ·   🎞 Animation: ${anim}`;
-        const l3 =
-            `🗣 Tagline: ${STATE.tagline ? 'shown' : '—'}   ·   ` +
-            `🔘 Actions: ${STATE.actions ? 'shown' : '—'}   ·   ` +
-            `⟲ Replay: ${STATE.replay ? 'visible' : '—'}`;
-
-        dbgEl.textContent = [l1, l2, l3].join('\n');
-        dbgEl.scrollTop = dbgEl.scrollHeight;
-    }, 120);
-}
-
 function dbgStopTicker() {
-    if (dbgTickerId) { clearInterval(dbgTickerId); dbgTickerId = null; }
+    if (dbgTickerId) {
+        clearInterval(dbgTickerId);
+        dbgTickerId = null;
+    }
 }
+
 
 // ======================================
 // MAIN FLOW
@@ -385,32 +414,33 @@ async function runShowcaseFlow() {
     if (actEl) { actEl.classList.remove('show'); actEl.style.opacity = 0; }
     if (repEl) repEl.style.opacity = 0;
 
-    metrics.start = performance.now();
-    LOG.setEpoch(metrics.start);       // anchor logger timestamps to this run
-    metrics.showcase = metrics.t_tagline = metrics.t_actions = metrics.total = 0;
-    Object.assign(STATE, { theme: null, animation: null, tagline: false, actions: false, replay: false });
-
-    if (CONFIG.DEBUG) { dbgBuffer = []; dbgStartTicker(); dbgPush('Flow started'); }
+    rtReset();
+    if (CONFIG.DEBUG) { dbgBuffer = []; dbgPush('Flow started'); }
 
     await preloadLogos();
 
     const s0 = performance.now();
     const lastShuffleCode = await shuffleForDuration();
-    metrics.showcase = performance.now() - s0;
-    LOG.log('Shuffle complete', { duration: secs(metrics.showcase), lastShuffleCode });
-    if (CONFIG.DEBUG) dbgPush(`Showcase done in ${secs(metrics.showcase)}`);
+    const showcaseMs = performance.now() - s0;
+    RUNTIME.times.showcase = showcaseMs;
+    RUNTIME.times.total = showcaseMs;
+    mark('showcase', { duration: showcaseMs, lastFrame: lastShuffleCode });
+    if (CONFIG.DEBUG) dbgPush(`Showcase done in ${secs(showcaseMs)}`);
 
     const finalCode = pickRandomDifferent(lastShuffleCode);
-    LOG.log('Picked final theme candidate', { finalCode });
+    RUNTIME.theme = finalCode;
+    window.LOG?.info?.('theme.selected', { theme: finalCode });
+    window.log?.info?.('theme.selected', { theme: finalCode });
+
     await finalReveal(finalCode);
+    mark('theme', { theme: finalCode });
+    dbgPush(`Theme: ${finalCode}`);
 
     await sleep(CONFIG.SEQUENCE.TAGLINE_DELAY);
     if (tagEl) {
         tagEl.style.transition = 'opacity .35s ease, transform .35s ease';
         tagEl.style.opacity = 1;
-        metrics.t_tagline = performance.now() - metrics.start;
-        STATE.tagline = true;
-        LOG.log('Tagline shown', { at: secs(metrics.t_tagline) });
+        mark('tagline');
         if (CONFIG.DEBUG) dbgPush('Tagline shown');
     }
 
@@ -419,17 +449,13 @@ async function runShowcaseFlow() {
         actEl.style.transition = 'opacity .2s ease';
         actEl.style.opacity = 1;
         actEl.classList.add('show');
-        metrics.t_actions = performance.now() - metrics.start;
-        metrics.total = metrics.t_actions;
-        STATE.actions = true;
-        LOG.log('Actions shown', { at: secs(metrics.t_actions) });
+        mark('actions');
         if (CONFIG.DEBUG) dbgPush('Actions shown');
     }
 
     await sleep(CONFIG.SEQUENCE.REPLAY_DELAY);
     if (repEl) repEl.style.opacity = 1;
-    STATE.replay = true;
-    LOG.log('Replay visible');
+    mark('replay');
     if (CONFIG.DEBUG) { dbgPush('Replay visible'); dbgStopTicker(); }
 
     isRunning = false;
