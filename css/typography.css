@@ -1,0 +1,317 @@
+/*
+ * File: typography.css
+ * Description: Typography stylesheet for the project.
+ * Author: Eliezer Chavez
+ * Date: October 2, 2025
+ * Version: 1.0.1
+ *
+ * Centralize all type & text styles so it can be included anywhere.
+ *
+ * Table of Contents:
+ * 1. Fonts (@font-face)
+ * 2. Tokens (:root)
+ * 3. Base (html, body)
+ * 4. Type Roles (headings, body, links)
+ * 5. Elements (lists, blockquotes, code, captions)
+ * 6. Utilities (measure, lead, eyebrow, muted, on-dark, visually-hidden)
+ * 7. Focus & A11y
+ * 8. Media (reduced motion, print)
+ */
+
+/* -----------------------------
+   1) @font-face — Delight Family
+   Fallbacks ensure graceful degradation if webfonts fail to load.
+   IMPORTANT: Update the src: URLs to your actual paths.
+   ----------------------------- */
+
+/* Delight ExtraBold */
+@font-face {
+  font-family: "Delight";
+  src: url("/fonts/delight-extrabold.woff2") format("woff2"),
+       url("/fonts/delight-extrabold.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Delight SemiBold */
+@font-face {
+  font-family: "Delight";
+  src: url("/fonts/delight-semibold.woff2") format("woff2"),
+       url("/fonts/delight-semibold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Delight Medium (fallback if SemiBold unavailable) */
+@font-face {
+  font-family: "Delight";
+  src: url("/fonts/delight-medium.woff2") format("woff2"),
+       url("/fonts/delight-medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Delight Regular */
+@font-face {
+  font-family: "Delight";
+  src: url("/fonts/delight-regular.woff2") format("woff2"),
+       url("/fonts/delight-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Delight Light */
+@font-face {
+  font-family: "Delight";
+  src: url("/fonts/delight-light.woff2") format("woff2"),
+       url("/fonts/delight-light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Delight ExtraLight */
+@font-face {
+  font-family: "Delight";
+  src: url("/fonts/delight-extralight.woff2") format("woff2"),
+       url("/fonts/delight-extralight.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* -----------------------------
+   2) Tokens — keep in sync w/ main.css if tokens also appear there
+   ----------------------------- */
+:root {
+  /* Brand palette (HEX is source of truth) */
+  --ec-teal-500: #00C4B3;        /* links & accents */
+  --ec-green-800: #00524C;
+  --ec-green-700: #007167;
+  --ec-navy-900: #002E6D;        /* primary body text on light */
+  --ec-dark-gunmetal: #1D252C;   /* dark UI surfaces */
+  --ec-charcoal: #323E48;        /* dark text on light (alt) */
+  --ec-black-coral: #5B6670;     /* secondary text */
+  --ec-metallic-silver: #A2A9AD; /* borders/disabled */
+  /* dark UI surfaces */
+  /* dark text on light (alt) */
+  /* secondary text */
+  /* borders/disabled */
+  --ec-white: #FFFFFF;
+
+  /* Typography */
+  --ec-font-sans: "Delight", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                   Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --ec-line-measure: 60ch; /* ~60–70ch recommended */
+
+  /* Type scale (fluid clamp: min | preferred | max) */
+  --ec-fs-10: clamp(0.625rem, 0.59rem + 0.15vw, 0.75rem);  /* 10–12px Caption */
+  --ec-fs-12: clamp(0.75rem, 0.72rem + 0.15vw, 0.875rem);  /* 12–14px Small */
+  --ec-fs-14: clamp(0.875rem, 0.84rem + 0.20vw, 1.0rem);   /* 14–16px Body */
+  --ec-fs-16: clamp(1.0rem, 0.96rem + 0.25vw, 1.125rem);   /* 16–18px Body L */
+  --ec-fs-22: clamp(1.125rem, 1.00rem + 0.75vw, 1.375rem); /* 18–22px H3 */
+  --ec-fs-28: clamp(1.375rem, 1.20rem + 1.00vw, 1.75rem);  /* 22–28px H2 */
+  --ec-fs-36: clamp(1.75rem, 1.40rem + 1.75vw, 2.25rem);   /* 28–36px H1 */
+
+  /* Weights */
+  --ec-w-extralight: 200;
+  --ec-w-light: 300;
+  --ec-w-regular: 400;
+  --ec-w-medium: 500;
+  --ec-w-semibold: 600;
+  --ec-w-extrabold: 800;
+
+  /* Focus */
+  --ec-focus-ring: 2px solid var(--ec-teal-500);
+  --ec-focus-offset: 2px;
+}
+
+/* -----------------------------
+   3) Base
+   ----------------------------- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  font-family: var(--ec-font-sans);
+  font-weight: var(--ec-w-regular);
+  font-size: var(--ec-fs-14);
+  line-height: 1.5;
+  color: var(--ec-navy-900);
+  background-color: var(--ec-white);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Avoid faux bold/italic when a weight/style is missing */
+  font-synthesis-weight: none;
+  font-synthesis-style: none;
+}
+
+/* Measure & rhythm helpers */
+.ec-measure { max-width: var(--ec-line-measure); }
+.ec-lead { font-size: var(--ec-fs-16); color: var(--ec-charcoal); }
+.ec-muted { color: var(--ec-black-coral); }
+.ec-eyebrow {
+  font-size: var(--ec-fs-12);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ec-black-coral);
+  font-weight: var(--ec-w-semibold); /* Semibold preferred */
+}
+
+/* Optional weight utilities */
+.text-extralight { font-weight: var(--ec-w-extralight); }
+.text-light { font-weight: var(--ec-w-light); }
+.text-regular { font-weight: var(--ec-w-regular); }
+.text-medium { font-weight: var(--ec-w-medium); }
+.text-semibold { font-weight: var(--ec-w-semibold); }
+.text-extrabold { font-weight: var(--ec-w-extrabold); }
+
+/* -----------------------------
+   4) Type Roles — headings & body
+   ----------------------------- */
+h1, .h1 {
+  font-size: var(--ec-fs-36);
+  line-height: 1.22;
+  font-weight: var(--ec-w-extrabold); /* Delight ExtraBold */
+  letter-spacing: -0.01em;
+  margin: 0.6em 0 0.4em;
+  color: var(--ec-navy-900);
+}
+h2, .h2 {
+  font-size: var(--ec-fs-28);
+  line-height: 1.25;
+  font-weight: var(--ec-w-semibold); /* Delight SemiBold */
+  letter-spacing: -0.005em;
+  margin: 0.8em 0 0.45em;
+  color: var(--ec-navy-900);
+}
+/* If SemiBold is temporarily unavailable, add .use-medium-headings to <body> */
+.use-medium-headings h2,
+.use-medium-headings .h2 { font-weight: var(--ec-w-medium); }
+
+h3, .h3 {
+  font-size: var(--ec-fs-22);
+  line-height: 1.3;
+  font-weight: var(--ec-w-medium); /* Delight Medium */
+  margin: 1em 0 0.5em;
+  color: var(--ec-navy-900);
+}
+h4, .h4 {
+  font-size: var(--ec-fs-16);
+  line-height: 1.35;
+  font-weight: var(--ec-w-semibold); /* small label/subhead */
+  margin: 1.1em 0 0.55em;
+  color: var(--ec-navy-900);
+}
+
+p, ul, ol, blockquote, figure { margin: 0 0 1em; }
+
+/* Links */
+a {
+  color: var(--ec-teal-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+}
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible {
+  outline: var(--ec-focus-ring);
+  outline-offset: var(--ec-focus-offset);
+  text-decoration: none;
+}
+
+/* -----------------------------
+   5) Elements
+   ----------------------------- */
+/* Emphasis & inline code */
+strong { font-weight: var(--ec-w-semibold); }
+em { font-style: italic; }
+code, kbd, samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  background: #f6f8fa;
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Lists */
+ul, ol { padding-inline-start: 1.25rem; }
+li + li { margin-top: 0.3em; }
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--ec-metallic-silver);
+  padding: 0.5rem 1rem;
+  color: var(--ec-charcoal);
+  background: #fafbfc;
+  border-radius: 6px;
+}
+
+/* Captions & small text */
+.small, small { font-size: var(--ec-fs-12); line-height: 1.45; color: var(--ec-black-coral); }
+.caption { font-size: var(--ec-fs-10); line-height: 1.4; color: var(--ec-black-coral); }
+
+/* -----------------------------
+   6) On-dark helper
+   ----------------------------- */
+.on-dark,
+.on-dark p,
+.on-dark h1,
+.on-dark h2,
+.on-dark h3,
+.on-dark h4 { color: var(--ec-white); }
+.on-dark a {
+  color: var(--ec-teal-500); /* Keep teal for contrast; avoid long body in teal */
+  text-decoration: underline;
+}
+.on-dark .ec-muted,
+.on-dark .caption,
+.on-dark small { color: #E6E9ED; }
+
+/* -----------------------------
+   7) Focus & A11y
+   ----------------------------- */
+[role="button"], button, a, input, textarea, select {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--ec-focus-ring);
+  outline-offset: var(--ec-focus-offset);
+}
+
+/* Accessibility helpers */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; border: 0; padding: 0; margin: -1px;
+}
+
+/* -----------------------------
+   8) Media
+   ----------------------------- */
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print defaults */
+@media print {
+  a { text-decoration: none; }
+  .on-dark, .on-dark * { color: #000 !important; }
+}

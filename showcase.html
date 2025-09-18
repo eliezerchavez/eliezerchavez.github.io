@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EC Typography Showcase</title>
+  <!-- Load typography source of truth first -->
+  <link rel="stylesheet" href="/css/typography.css">
+  <!-- Your site styles (optional) -->
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    /* Local demo helpers only for the showcase page */
+    .demo-wrap { max-width: 72rem; margin: 4rem auto; padding: 0 1rem 5rem; }
+    .swatch { display:inline-block; width: 10rem; height: 4rem; border-radius: 8px; border:1px solid #E2E6E9; margin-right: 0.75rem; }
+    .card { border:1px solid #E2E6E9; border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+    .grid { display:grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+    .bg-dark { background:#1D252C; padding:1.25rem; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <main class="demo-wrap ec-measure">
+    <p class="ec-eyebrow">Typography System</p>
+    <h1>Cloud Architecture for Outcomes</h1>
+    <p class="ec-lead">Delight is the single brand family. Headlines in Extra&nbsp;Bold, subheads in Semibold/Medium, and body in Regular.</p>
+    <p>Body copy uses a fluid type scale and 60–70ch measure. Links are always underlined like <a href="#">this example link</a> and have visible focus.</p>
+    <div class="card">
+      <h2>Heading Level 2</h2>
+      <p class="ec-muted">Muted body for supporting text. <strong>Strong</strong> and <em>emphasis</em> styles are tuned. Inline <code>code</code> has a subtle background.</p>
+      <ul>
+        <li>Semantic list item</li>
+        <li>Another item</li>
+      </ul>
+      <blockquote>Clear, accessible quotations use a subtle left rule and neutral background.</blockquote>
+      <p class="caption">Caption text uses the small scale and increased contrast on light backgrounds.</p>
+    </div>
+
+    <div class="card bg-dark on-dark">
+      <p class="ec-eyebrow">On Dark</p>
+      <h2>Accessible on dark surfaces</h2>
+      <p>Copy flips to white automatically; links stay teal for contrast — <a href="#">try focus</a>.</p>
+      <p class="caption">Captions and small text are lightened for AA/AAA contrast.</p>
+    </div>
+
+    <section>
+      <h2>Color Swatches (key tokens)</h2>
+      <div class="grid">
+        <div>
+          <div class="swatch" style="background:#00C4B3"></div>
+          <p class="caption">EC Teal 500 #00C4B3</p>
+        </div>
+        <div>
+          <div class="swatch" style="background:#002E6D"></div>
+          <p class="caption">EC Navy 900 #002E6D</p>
+        </div>
+        <div>
+          <div class="swatch" style="background:#323E48"></div>
+          <p class="caption">Charcoal #323E48</p>
+        </div>
+        <div>
+          <div class="swatch" style="background:#1D252C"></div>
+          <p class="caption">Dark Gunmetal #1D252C</p>
+        </div>
+        <div>
+          <div class="swatch" style="background:#FFFFFF; border:1px solid #E2E6E9"></div>
+          <p class="caption">White #FFFFFF</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
