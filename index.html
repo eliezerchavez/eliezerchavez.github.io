@@ -1,51 +1,53 @@
----
-layout: default
-title: thinking out loud
-description: Expert Solutions/Cloud/Security Architect • DevOps Evangelist • Hiker/Trekker
-featured_image: /images/home.jpg
----
+<!DOCTYPE html>
+<html lang="en">
 
-<section class="hero">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to Eli’s corner of the internet – Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm. No promises, but I might fix your mess.">
+    <meta name="keywords" content="Eliezer Chavez, Eli Chavez, Cloud Architect, DevOps Expert, Cybersecurity, AWS Champion, Solutions Architect, Digital Transformation, Infrastructure as Code, CI/CD Pipelines, Kubernetes, Cloud Computing, Cloud-Native Architectures, Disaster Recovery, Technology Leader, Problem Solver, Customer-Focused, Digital Innovator, Mentor, Team Leader, Biker, Tech Enthusiast, Utilities Cloud Solutions, Finance Cloud Architectures, Retail DevOps, IT Operations Expert, Automation Specialist, Sarcastic Humor, Passion for Innovation, Thought Leader, Outdoor Enthusiast">
+    <meta name="author" content="Eliezer (Eli) Chavez">
+    <title>eliezerchavez</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
 
-	<div class="hero__image" style="background-image: url({{ page.featured_image | relative_url }})">
-		<div class="hero__overlay"></div>
-	</div>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Eliezer (Eli) Chavez",
+          "jobTitle": "Cybersecurity & DevOps Team Lead • Cloud/Solutions Architect",
+          "description": "Cloud Architect, DevOps herder, and overthinker. Come for the credentials, stay for the sarcasm.",
+          "url": "https://eliezerchavez.com",
+          "sameAs": [
+            "https://www.linkedin.com/in/eliezerchavez/",
+            "https://instagram.com/eliezerchavez",
+            "https://github.com/eliezerchavez"
+          ],
+          "worksFor": {
+            "@type": "Organization",
+            "name": "NTT DATA"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Milford",
+            "addressRegion": "Connecticut",
+            "addressCountry": "USA"
+          },
+          "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "Universidad 'Alejandro de Humboldt'"
+          }
+        }
+        </script>
+</head>
 
-	<div class="wrap">
+<body>
+    <div class="container">
+        <img src="logo.webp" alt="eliezerchavez" class="logo">
+        <button class="contact-btn" onclick="contactMe()">Contact</button>
+    </div>
+    <script src="script.js"></script>
+</body>
 
-		<h1>thinking out loud</h1>
-		<p>Cloud & DevOps</p>
-
-		<!--{% include socials.html %}-->
-
-	</div>
-
-</section>
-
-<section class="listing">
-
-	<div class="wrap">
-
-		{% for project in site.projects reversed %}
-
-		<article class="post">
-
-			<div class="post__image-wrap">
-				<div class="post__image" style="background-image: url({{ project.featured_image | relative_url }})"></div>
-			</div>
-
-			<div class="post__content-wrap">
-				<div class="post__content">
-					<h2 class="post__title"><a href="{{ project.url | relative_url }}">{{ project.title }}</a></h2>
-					<p class="post__subtitle">{{ project.subtitle }}</p>
-					<p class="post__description">{{ project.description }}</p>
-				</div>
-			</div>
-
-		</article>
-
-		{% endfor %}
-
-	</div>
-
-</section>
+</html>
