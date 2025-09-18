@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brand Icon Playground</title>
+  <style>
+    :root {
+      --bg: #002E6D;
+      --brand: #00C4B3;
+      /* overlay controls */
+      --ref-on: 1;
+      --ref-opacity: .12;
+      --ref-scale: 1;
+      /* native pixel refs (docs) */
+      --ref-chev-w: 557;
+      --ref-chev-h: 668;
+      --ref-cur-w: 442;
+      --ref-cur-h: 151;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0
+    }
+
+    body {
+      background: var(--bg);
+      overflow: hidden;
+      font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      color: #fff
+    }
+
+    /* ===== Canvas ===== */
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%
+    }
+
+    .center-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none
+    }
+
+    /* Reference overlay */
+    .ref {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      opacity: calc(var(--ref-on)*var(--ref-opacity));
+    }
+
+    .ref img {
+      width: calc(var(--ref-scale) * var(--ref-chev-w) * 1px);
+      height: auto
+    }
+
+    /* ===== Draggable boxes ===== */
+    .box {
+      position: absolute;
+      /* free move */
+      transform-origin: top left;
+      user-select: none;
+    }
+
+    .chev.box .img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block
+    }
+
+    .cur.box svg {
+      width: 100%;
+      height: 100%;
+      display: block
+    }
+
+    .cur rect {
+      fill: var(--brand);
+      rx: 2
+    }
+
+    /* Handles */
+    .handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      right: -6px;
+      bottom: -6px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, .5);
+      border-radius: 2px;
+      cursor: nwse-resize;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, .2);
+    }
+
+    .box.dragging {
+      outline: 1px dashed rgba(255, 255, 255, .6)
+    }
+
+    .box.resizing {
+      outline: 1px solid rgba(255, 255, 255, .8)
+    }
+
+    /* ===== Panel ===== */
+    .panel {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      width: 340px;
+      background: rgba(0, 0, 0, .35);
+      backdrop-filter: saturate(140%) blur(6px);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 12px;
+      padding: 12px;
+      z-index: 10
+    }
+
+    .panel h2 {
+      margin: 0 0 8px 0;
+      font-size: 16px
+    }
+
+    .panel .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px
+    }
+
+    .panel label {
+      font-size: 12px;
+      opacity: .85
+    }
+
+    .panel input[type="number"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .06);
+      color: #fff
+    }
+
+    .panel .sec {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, .2)
+    }
+
+    .panel .btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .panel button {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .09);
+      color: #fff;
+      cursor: pointer
+    }
+
+    .panel .small {
+      font-size: 12px;
+      opacity: .85
+    }
+
+    .panel .toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 13px
+    }
+
+    .panel .mono {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 12px
+    }
+
+    /* HUD */
+    .hud {
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      font-size: 12px;
+      opacity: .85;
+      background: rgba(0, 0, 0, .28);
+      padding: 6px 8px;
+      border-radius: 8px
+    }
+
+    .hud kbd {
+      background: rgba(255, 255, 255, .15);
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-family: ui-monospace, Menlo, Consolas, monospace
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stage" id="stage">
+    <!-- Reference overlay -->
+    <div class="ref"><img src="/img/ec-prompt-cursor.svg" alt="" aria-hidden="true"></div>
+
+    <!-- Chevron box -->
+    <div class="box chev" id="chevBox"
+         style="left: calc(50% - 278px); top: calc(50% - 334px); width: 557px; height: 668px;">
+      <img class="img" src="/img/ec-chevron.svg" alt="" aria-hidden="true" />
+      <div class="handle"></div>
+    </div>
+
+    <!-- Cursor/underscore box -->
+    <div class="box cur" id="curBox"
+         style="left: calc(50% + 10px); top: calc(50% + 334px - 151px); width: 442px; height: 151px;">
+      <svg viewBox="0 0 442 151" preserveAspectRatio="none">
+        <rect x="0" y="0" width="442" height="151" />
+      </svg>
+      <div class="handle"></div>
+    </div>
+  </div>
+
+  <!-- Side Panel -->
+  <div class="panel" id="panel">
+    <h2>Brand Icon Geometry</h2>
+    <div class="row">
+      <label>Snap baseline
+        <div class="toggle"><input id="snap" type="checkbox" checked> <span>underscore bottom = chevron bottom</span>
+        </div>
+      </label>
+      <label>Overlay <span class="small">(R / [ ] / - = / 0)</span>
+        <div class="toggle">
+          <input id="ovOn" type="checkbox" checked>
+          <span>show</span>
+          <input id="ovOpacity" type="range" min="0" max="1" step="0.01" value="0.12" style="flex:1">
+        </div>
+      </label>
+    </div>
+
+    <div class="sec">
+      <div class="small">Absolute (px)</div>
+      <div class="row" style="margin-top:6px">
+        <label>Chevron X <input id="cX" type="number"></label>
+        <label>Chevron Y <input id="cY" type="number"></label>
+      </div>
+      <div class="row">
+        <label>Chevron W <input id="cW" type="number"></label>
+        <label>Chevron H <input id="cH" type="number"></label>
+      </div>
+      <div class="row">
+        <label>Underscore X <input id="uX" type="number"></label>
+        <label>Underscore Y <input id="uY" type="number"></label>
+      </div>
+      <div class="row">
+        <label>Underscore W <input id="uW" type="number"></label>
+        <label>Underscore H <input id="uH" type="number"></label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="small">Normalized (relative to Chevron W)</div>
+      <div class="mono" id="normalizedOut" style="margin-top:6px"></div>
+    </div>
+
+    <div class="btns">
+      <button id="copyJson">Copy JSON</button>
+      <button id="logJson">Log to Console</button>
+    </div>
+    <div class="small" style="margin-top:6px">Tip: use Arrow keys to nudge; hold <kbd>Shift</kbd> for 10×. Alt-resize to
+      unlock aspect.</div>
+  </div>
+
+  <div class="hud">
+    <div><strong>Drag</strong> elements • <strong>Resize</strong> via ◼ handle</div>
+    <div><strong>Snap</strong> baseline in panel • <strong>Export</strong> JSON</div>
+  </div>
+
+  <script>
+    (function () {
+      const stage = document.getElementById('stage');
+      const chev = document.getElementById('chevBox');
+      const cur = document.getElementById('curBox');
+
+      // aspect ratios from your pixel refs
+      const CHEV_AR = 668 / 557;
+      const CUR_AR = 151 / 442;
+
+      const $ = (id) => document.getElementById(id);
+      const inputs = {
+        cX: $('cX'), cY: $('cY'), cW: $('cW'), cH: $('cH'),
+        uX: $('uX'), uY: $('uY'), uW: $('uW'), uH: $('uH')
+      };
+      const snap = $('snap');
+      const ovOn = $('ovOn'); const ovOpacity = $('ovOpacity');
+
+      // Overlay bindings
+      const root = document.documentElement;
+      ovOn.addEventListener('change', () => root.style.setProperty('--ref-on', ovOn.checked ? '1' : '0'));
+      ovOpacity.addEventListener('input', () => root.style.setProperty('--ref-opacity', ovOpacity.value));
+
+      // Helpers
+      const getRect = el => el.getBoundingClientRect();
+      const setBox = (el, { x, y, w, h }) => { el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.width = w + 'px'; el.style.height = h + 'px'; };
+      const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+      function updateInputsFromDOM() {
+        const s = stage.getBoundingClientRect();
+        const cb = getRect(chev);
+        const ub = getRect(cur);
+        inputs.cX.value = Math.round(cb.left - s.left);
+        inputs.cY.value = Math.round(cb.top - s.top);
+        inputs.cW.value = Math.round(cb.width);
+        inputs.cH.value = Math.round(cb.height);
+        inputs.uX.value = Math.round(ub.left - s.left);
+        inputs.uY.value = Math.round(ub.top - s.top);
+        inputs.uW.value = Math.round(ub.width);
+        inputs.uH.value = Math.round(ub.height);
+        refreshNormalized();
+      }
+
+      function applyInputsToDOM() {
+        const s = stage.getBoundingClientRect();
+        const vals = {
+          cX: +inputs.cX.value, cY: +inputs.cY.value, cW: +inputs.cW.value, cH: +inputs.cH.value,
+          uX: +inputs.uX.value, uY: +inputs.uY.value, uW: +inputs.uW.value, uH: +inputs.uH.value
+        };
+        setBox(chev, { x: vals.cX, y: vals.cY, w: vals.cW, h: vals.cH });
+        setBox(cur, { x: vals.uX, y: vals.uY, w: vals.uW, h: vals.uH });
+        if (snap.checked) {
+          const cb = getRect(chev), ub = getRect(cur);
+          cur.style.top = (cb.bottom - ub.height - s.top) + 'px';
+        }
+        refreshNormalized();
+      }
+
+      // Normalized output
+      function refreshNormalized() {
+        const s = stage.getBoundingClientRect();
+        const cb = getRect(chev);
+        const ub = getRect(cur);
+
+        const chevW = cb.width;
+        const chevH = cb.height;
+
+        const ratios = {
+          chev_aspect: +(chevH / chevW).toFixed(10),
+          cursor_w_ratio: +(ub.width / chevW).toFixed(10),
+          cursor_h_ratio: +(ub.height / chevW).toFixed(10),
+          gap_px: Math.round((ub.left) - (cb.right)), // positive if underscore is to the right
+          gap_ratio: +(((ub.left - cb.right) / chevW)).toFixed(10),
+          // optional offsets relative to chevron left/bottom:
+          cursor_left_ratio: +((ub.left - cb.left) / chevW).toFixed(10),
+          cursor_bottom_align_delta_px: Math.round((cb.bottom) - (ub.bottom)) // should be 0 when snapped
+        };
+
+        const cssVars = {
+          "--chev-aspect": ratios.chev_aspect,
+          "--cursor-w-ratio": ratios.cursor_w_ratio,
+          "--cursor-h-ratio": ratios.cursor_h_ratio,
+          "--gap": ratios.gap_px + "px"
+        };
+
+        const exportObj = {
+          absolute: {
+            chevron: { x: Math.round(cb.left - s.left), y: Math.round(cb.top - s.top), w: Math.round(chevW), h: Math.round(chevH) },
+            cursor: { x: Math.round(ub.left - s.left), y: Math.round(ub.top - s.top), w: Math.round(ub.width), h: Math.round(ub.height) }
+          },
+          normalized: ratios,
+          css_vars: cssVars
+        };
+
+        $('normalizedOut').textContent = JSON.stringify(exportObj.normalized, null, 2);
+        // store for copy/log
+        window.__brandExport = exportObj;
+      }
+
+      // Make draggable & resizable
+      function makeDraggable(el, keepAspect, aspect) {
+        const handle = el.querySelector('.handle');
+        let dragging = false, resizing = false, startX = 0, startY = 0, startL = 0, startT = 0, startW = 0, startH = 0;
+
+        function onDownDrag(ev) {
+          if (ev.target === handle) return;
+          dragging = true; el.classList.add('dragging');
+          startX = ev.clientX; startY = ev.clientY;
+          const r = getRect(el); const s = stage.getBoundingClientRect();
+          startL = r.left - s.left; startT = r.top - s.top;
+          el.setPointerCapture?.(ev.pointerId);
+        }
+        function onMoveDrag(ev) {
+          if (!dragging || resizing) return;
+          const s = stage.getBoundingClientRect();
+          let nx = startL + (ev.clientX - startX);
+          let ny = startT + (ev.clientY - startY);
+          nx = clamp(nx, 0, s.width - el.offsetWidth);
+          ny = clamp(ny, 0, s.height - el.offsetHeight);
+          el.style.left = nx + 'px'; el.style.top = ny + 'px';
+          if (snap.checked && el === cur) {
+            // maintain bottom alignment to chevron
+            const cb = getRect(chev), ub = getRect(cur);
+            cur.style.top = (cb.bottom - ub.height - s.top) + 'px';
+          }
+          updateInputsFromDOM();
+        }
+        function onUpDrag(ev) { dragging = false; el.classList.remove('dragging'); }
+
+        function onDownResize(ev) {
+          resizing = true; el.classList.add('resizing');
+          startX = ev.clientX; startY = ev.clientY;
+          startW = el.offsetWidth; startH = el.offsetHeight;
+          const r = getRect(el); const s = stage.getBoundingClientRect();
+          startL = r.left - s.left; startT = r.top - s.top;
+          el.setPointerCapture?.(ev.pointerId);
+        }
+        function onMoveResize(ev) {
+          if (!resizing) return;
+          const s = stage.getBoundingClientRect();
+          let dx = ev.clientX - startX;
+          let dy = ev.clientY - startY;
+          let w = startW + dx;
+          let h = startH + dy;
+
+          const freeScale = ev.altKey; // hold Alt to unlock aspect
+          if (!freeScale && keepAspect) {
+            // keep aspect by following the dominant delta
+            const ar = aspect;
+            if (Math.abs(dx) > Math.abs(dy)) h = w * ar; else w = h / ar;
+          }
+          w = Math.max(8, Math.min(w, s.width - startL));
+          h = Math.max(8, Math.min(h, s.height - startT));
+
+          el.style.width = w + 'px'; el.style.height = h + 'px';
+
+          if (snap.checked && el === cur) {
+            const cb = getRect(chev), ub = getRect(cur);
+            cur.style.top = (cb.bottom - ub.height - s.top) + 'px';
+          }
+          updateInputsFromDOM();
+        }
+        function onUpResize(ev) { resizing = false; el.classList.remove('resizing'); }
+
+        el.addEventListener('pointerdown', onDownDrag);
+        el.addEventListener('pointermove', onMoveDrag);
+        el.addEventListener('pointerup', onUpDrag);
+        el.addEventListener('pointercancel', onUpDrag);
+
+        handle.addEventListener('pointerdown', onDownResize);
+        el.addEventListener('pointermove', onMoveResize);
+        el.addEventListener('pointerup', onUpResize);
+        el.addEventListener('pointercancel', onUpResize);
+      }
+
+      makeDraggable(chev, true, CHEV_AR);
+      makeDraggable(cur, true, CUR_AR);
+
+      // Inputs -> DOM
+      Object.values(inputs).forEach(inp => {
+        inp.addEventListener('change', applyInputsToDOM);
+        inp.addEventListener('input', applyInputsToDOM);
+      });
+
+      // Snap toggle
+      snap.addEventListener('change', () => {
+        if (snap.checked) {
+          const s = stage.getBoundingClientRect();
+          const cb = getRect(chev), ub = getRect(cur);
+          cur.style.top = (cb.bottom - ub.height - s.top) + 'px';
+        }
+        updateInputsFromDOM();
+      });
+
+      // Keyboard nudging (selected element = last interacted; default underscore)
+      let active = cur;
+      [chev, cur].forEach(el => {
+        el.addEventListener('pointerdown', () => { active = el; });
+      });
+      window.addEventListener('keydown', (e) => {
+        const fast = e.shiftKey ? 10 : 1;
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+          const s = stage.getBoundingClientRect();
+          const r = active.getBoundingClientRect();
+          let x = r.left - s.left, y = r.top - s.top, w = r.width, h = r.height;
+          if (e.key === 'ArrowLeft') x -= fast;
+          if (e.key === 'ArrowRight') x += fast;
+          if (e.key === 'ArrowUp') y -= fast;
+          if (e.key === 'ArrowDown') y += fast;
+          x = clamp(x, 0, s.width - w);
+          y = clamp(y, 0, s.height - h);
+          active.style.left = x + 'px';
+          active.style.top = y + 'px';
+          if (snap.checked && active === cur) {
+            const cb = getRect(chev), ub = getRect(cur);
+            cur.style.top = (cb.bottom - ub.height - s.top) + 'px';
+          }
+          updateInputsFromDOM(); e.preventDefault();
+        }
+        // Overlay hotkeys (R, [, ], -, =, 0)
+        const gs = getComputedStyle(root);
+        if (e.key === 'r' || e.key === 'R') { root.style.setProperty('--ref-on', (gs.getPropertyValue('--ref-on').trim() === '1') ? '0' : '1'); }
+        if (e.key === '[') { const v = parseFloat(gs.getPropertyValue('--ref-opacity')) || 0; root.style.setProperty('--ref-opacity', Math.max(0, Math.min(1, v - 0.05))); }
+        if (e.key === ']') { const v = parseFloat(gs.getPropertyValue('--ref-opacity')) || 0; root.style.setProperty('--ref-opacity', Math.max(0, Math.min(1, v + 0.05))); }
+        if (e.key === '-' || e.key === '_') { const v = parseFloat(gs.getPropertyValue('--ref-scale')) || 1; root.style.setProperty('--ref-scale', Math.max(.1, Math.min(10, v - 0.05))); }
+        if (e.key === '=' || e.key === '+') { const v = parseFloat(gs.getPropertyValue('--ref-scale')) || 1; root.style.setProperty('--ref-scale', Math.max(.1, Math.min(10, v + 0.05))); }
+        if (e.key === '0') { root.style.setProperty('--ref-scale', '1'); }
+      });
+
+      // Export
+      function buildExport() {
+        const s = stage.getBoundingClientRect();
+        const cb = getRect(chev), ub = getRect(cur);
+        const chevW = cb.width, chevH = cb.height;
+        const normalized = {
+          chev_aspect: +(chevH / chevW).toFixed(10),
+          cursor_w_ratio: +(ub.width / chevW).toFixed(10),
+          cursor_h_ratio: +(ub.height / chevW).toFixed(10),
+          gap_px: Math.round(ub.left - cb.right),
+          gap_ratio: +(((ub.left - cb.right) / chevW)).toFixed(10),
+          cursor_left_ratio: +((ub.left - cb.left) / chevW).toFixed(10),
+          cursor_bottom_align_delta_px: Math.round(cb.bottom - ub.bottom)
+        };
+        const css_vars = {
+          "--chev-aspect": normalized.chev_aspect,
+          "--cursor-w-ratio": normalized.cursor_w_ratio,
+          "--cursor-h-ratio": normalized.cursor_h_ratio,
+          "--gap": normalized.gap_px + "px"
+        };
+        const absolute = {
+          chevron: { x: Math.round(cb.left - s.left), y: Math.round(cb.top - s.top), w: Math.round(chevW), h: Math.round(chevH) },
+          cursor: { x: Math.round(ub.left - s.left), y: Math.round(ub.top - s.top), w: Math.round(ub.width), h: Math.round(ub.height) }
+        };
+        return { absolute, normalized, css_vars };
+      }
+
+      function pushExport() {
+        const data = buildExport();
+        window.__brandExport = data;
+        console.log("Brand Geometry Export:", data);
+        $('normalizedOut').textContent = JSON.stringify(data.normalized, null, 2);
+        return data;
+      }
+
+      $('logJson').addEventListener('click', pushExport);
+      $('copyJson').addEventListener('click', async () => {
+        const data = pushExport();
+        const text = JSON.stringify(data, null, 2);
+        try { await navigator.clipboard.writeText(text); } catch { }
+      });
+
+      // Init
+      updateInputsFromDOM();
+    })();
+  </script>
+</body>
+
+</html>
