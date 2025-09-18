@@ -1,0 +1,157 @@
+:root {
+    --bg-start: #000000;
+    /* start of background fade */
+    --bg: #002E6D;
+    /* final background color */
+    --brand: #00C4B3;
+
+    /* Final geometry ratios */
+    --chev-aspect: 1.2014652015;
+    --cursor-w-ratio: 0.7692307692;
+    --cursor-h-ratio: 0.2600732601;
+    --gap-ratio: -0.1794871795;
+    /* proportional gap */
+
+    /* Master width (adjusted clamp: smaller on desktop, safer on mobile) */
+    --chev-w: clamp(135px, 21vw, 357px);
+
+    /* Derived sizes */
+    --chev-h: calc(var(--chev-w) * var(--chev-aspect));
+    --cursor-w: calc(var(--chev-w) * var(--cursor-w-ratio));
+    --cursor-h: calc(var(--chev-w) * var(--cursor-h-ratio));
+    --gap: calc(var(--chev-w) * var(--gap-ratio));
+
+    /* Animation timings */
+    --bg-fade-dur: 1800ms;
+    /* background fade duration */
+    --wipe-dur: 1200ms;
+    /* chevron wipe duration  */
+    --cursor-in-dur: 220ms;
+    /* cursor fade-in (cosmetic) */
+    --cursor-delay: calc(var(--bg-fade-dur) + var(--wipe-dur) + 120ms);
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: grid;
+    place-items: center;
+
+    /* 1) start black, fade to brand blue */
+    background: var(--bg-start);
+    overflow: hidden;
+    animation: bgFade var(--bg-fade-dur) ease forwards;
+}
+
+.prompt {
+    display: flex;
+    align-items: flex-end;
+}
+
+.chev-wrap {
+    width: var(--chev-w);
+    aspect-ratio: calc(1 / var(--chev-aspect));
+    display: grid;
+    place-items: center;
+}
+
+.chevron {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+
+    /* 2) wipe in from top → bottom after bg fade */
+    clip-path: inset(0 0 100% 0);
+    /* fully hidden (height clipped) */
+    animation: chevWipe var(--wipe-dur) ease forwards;
+    animation-delay: var(--bg-fade-dur);
+}
+
+/* 3) cursor: fade in, then blink */
+.cursor {
+    width: var(--cursor-w);
+    height: var(--cursor-h);
+    margin-left: var(--gap);
+
+    /* initially hidden, then appear, then blink */
+    opacity: 0;
+    animation:
+        cursorIn var(--cursor-in-dur) ease forwards var(--cursor-delay),
+        blink 1s steps(1, end) infinite calc(var(--cursor-delay) + 150ms);
+}
+
+.cursor rect {
+    fill: var(--brand);
+    rx: 2;
+}
+
+/* ===== Animations ===== */
+
+@keyframes bgFade {
+    from {
+        background-color: var(--bg-start);
+    }
+
+    to {
+        background-color: var(--bg);
+    }
+}
+
+@keyframes chevWipe {
+    from {
+        clip-path: inset(0 0 100% 0);
+    }
+
+    /* hidden */
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+
+    /* fully visible */
+}
+
+@keyframes cursorIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Reduced motion: show final state immediately, no blinking */
+@media (prefers-reduced-motion: reduce) {
+    body {
+        animation: none;
+        background: var(--bg);
+    }
+
+    .chevron {
+        animation: none;
+        clip-path: inset(0 0 0 0);
+    }
+
+    .cursor {
+        animation: none;
+        opacity: 1;
+    }
+}
