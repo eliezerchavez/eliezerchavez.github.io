@@ -1,0 +1,84 @@
+:root {
+    --bg: #002E6D;
+    --brand: #00C4B3;
+
+    /* Final geometry ratios */
+    --chev-aspect: 1.2014652015;
+    --cursor-w-ratio: 0.7692307692;
+    --cursor-h-ratio: 0.2600732601;
+    --gap-ratio: -0.1794871795;
+    /* proportional gap */
+
+    /* Master width (adjusted clamp: smaller on desktop, safer on mobile) */
+    --chev-w: clamp(135px, 21vw, 357px);
+
+    /* Derived sizes */
+    --chev-h: calc(var(--chev-w) * var(--chev-aspect));
+    --cursor-w: calc(var(--chev-w) * var(--cursor-w-ratio));
+    --cursor-h: calc(var(--chev-w) * var(--cursor-h-ratio));
+    --gap: calc(var(--chev-w) * var(--gap-ratio));
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.prompt {
+    display: flex;
+    align-items: flex-end;
+}
+
+.chev-wrap {
+    width: var(--chev-w);
+    aspect-ratio: calc(1 / var(--chev-aspect));
+    display: grid;
+    place-items: center;
+}
+
+.chevron {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.cursor {
+    width: var(--cursor-w);
+    height: var(--cursor-h);
+    margin-left: var(--gap);
+    animation: blink 1s steps(1, end) infinite;
+}
+
+.cursor rect {
+    fill: var(--brand);
+    rx: 2;
+}
+
+@keyframes blink {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor {
+        animation: none;
+        opacity: 1;
+    }
+}
