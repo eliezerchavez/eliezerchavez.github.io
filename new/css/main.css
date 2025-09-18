@@ -1,0 +1,184 @@
+/* ==========================================================================
+   eliezerchavez.com — New Landing (EC chevron + terminal cursor)
+   --------------------------------------------------------------------------
+   Contents
+   0) Root tokens
+   1) Page reset / layout
+   2) Components (prompt, chevron, cursor)
+   3) Animations
+   4) Fallbacks (no aspect-ratio / no clip-path)
+   5) Accessibility (reduced motion, forced colors)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   0) Root tokens
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --bg-start: #000;
+  --bg:       #002E6D;     /* EC Navy 900 */
+  --brand:    #00C4B3;     /* EC Teal 500 */
+
+  /* Exact geometry from master art */
+  --chev-aspect:     0.8097319640;   /* H/W from 394.933 / 487.733 */
+  --cursor-w-ratio:  0.7925135269;   /* U / W  = 386.535 / 487.733 */
+  --bar-ratio:       0.2690016874;   /* X / W  = 131.201 / 487.733 */
+
+  /* Master width (smaller desktop ceiling; safer mobile floor) */
+  --chev-w: clamp(135px, 21vw, 357px);
+
+  /* Derived sizes */
+  --chev-h:   calc(var(--chev-w) * var(--chev-aspect)); /* H = W * (H/W) */
+  --cursor-w: calc(var(--chev-w) * var(--cursor-w-ratio));
+  --cursor-h: calc(var(--chev-w) * var(--bar-ratio));   /* height = X */
+
+  /* Timings */
+  --bg-fade-dur:   1800ms;  /* background fade duration */
+  --wipe-dur:      1200ms;  /* chevron wipe duration   */
+  --cursor-in-dur:  220ms;  /* cursor fade-in          */
+  --cursor-delay:   calc(var(--bg-fade-dur) + var(--wipe-dur) + 120ms);
+}
+
+
+/* ==========================================================================
+   1) Page reset / layout
+   ========================================================================== */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  display: grid;
+  place-items: center;
+  background: var(--bg-start);      /* 1) start black, fade to brand blue */
+  overflow: hidden;
+  animation: bgFade var(--bg-fade-dur) ease forwards;
+  color: var(--brand);              /* lets the cursor inherit via currentColor */
+}
+
+
+/* ==========================================================================
+   2) Components
+   ========================================================================== */
+
+.prompt {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;                           /* explicit; spacing controlled by cursor margin */
+  user-select: none;
+}
+
+.chev-wrap {
+  width: var(--chev-w);
+  aspect-ratio: calc(1 / var(--chev-aspect));
+  display: grid;
+  place-items: center;
+}
+
+.chevron {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  display: block;
+
+  /* 2) wipe in from top → bottom after bg fade */
+  clip-path: inset(0 0 100% 0);     /* fully hidden (height clipped) */
+  animation: chevWipe var(--wipe-dur) ease forwards;
+  animation-delay: var(--bg-fade-dur);
+
+  /* Perf hints for the clip-path animation */
+  will-change: clip-path;
+  transform: translateZ(0);         /* helps Safari/GPU compositing */
+}
+
+.cursor {
+  inline-size: var(--cursor-w);
+  block-size: var(--cursor-h);
+  margin-left: 0;
+
+  /* initially hidden, then appear, then blink */
+  opacity: 0;
+  animation:
+    cursorIn var(--cursor-in-dur) ease forwards var(--cursor-delay),
+    blink 1s steps(1, end) infinite calc(var(--cursor-delay) + 150ms);
+
+  display: inline-grid;
+  place-items: center;
+}
+
+.cursor rect {
+  fill: currentColor;               /* follows body/text color */
+  rx: 0;                            /* mild rounding */
+  shape-rendering: crispEdges;      /* sharp corners on small shapes */
+}
+
+
+/* ==========================================================================
+   3) Animations
+   ========================================================================== */
+
+@keyframes bgFade {
+  from { background-color: var(--bg-start); }
+  to   { background-color: var(--bg); }
+}
+
+@keyframes chevWipe {
+  from { clip-path: inset(0 0 100% 0); }   /* hidden */
+  to   { clip-path: inset(0 0 0 0); }      /* fully visible */
+}
+
+@keyframes cursorIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 49%  { opacity: 1; }
+  50%,100% { opacity: 0; }
+}
+
+
+/* ==========================================================================
+   4) Fallbacks
+   ========================================================================== */
+
+/* No aspect-ratio support: classic intrinsic ratio box */
+@supports not (aspect-ratio: 1) {
+  .chev-wrap { position: relative; width: var(--chev-w); }
+  .chev-wrap::before { content: ""; display: block; padding-top: calc(var(--chev-aspect) * 100%); }
+  .chevron { position: absolute; inset: 0; }
+}
+
+/* No clip-path support: fade the chevron instead of wiping */
+@supports not (clip-path: inset(0)) {
+  .chevron {
+    clip-path: none;
+    opacity: 0;
+    animation: fadeIn var(--wipe-dur) ease forwards;
+    animation-delay: var(--bg-fade-dur);
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+}
+
+
+/* ==========================================================================
+   5) Accessibility
+   ========================================================================== */
+
+/* Reduced motion: render the final state, no blinking */
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; background: var(--bg); }
+  .chevron { animation: none; clip-path: inset(0 0 0 0); }
+  .cursor { animation: none; opacity: 1; }
+}
+
+/* High-contrast / forced colors: ensure cursor is visible */
+@media (forced-colors: active) {
+  body { color: CanvasText; }       /* cursor uses currentColor */
+  .chevron { forced-color-adjust: none; } /* keep image/brand rendering */
+}
