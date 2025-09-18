@@ -18,7 +18,8 @@ const CONFIG = {
     SHOWCASE: {
         DURATION: Number(qs.get('duration')) || 3000,
         FRAME_MIN: 100,
-        FINAL_HOLD: 700
+        FINAL_HOLD: 700,
+        THEME: (qs.get('theme') || '').toUpperCase()
     },
     ANIMATION: {
         NAME: (qs.get('animation') || '').toLowerCase(),
@@ -427,7 +428,7 @@ async function runShowcaseFlow() {
     mark('showcase', { duration: showcaseMs, lastFrame: lastShuffleCode });
     if (CONFIG.DEBUG) dbgPush(`Showcase done in ${secs(showcaseMs)}`);
 
-    const finalCode = pickRandomDifferent(lastShuffleCode);
+    const finalCode = CONFIG.SHOWCASE.THEME || pickRandomDifferent(lastShuffleCode);
     RUNTIME.theme = finalCode;
     window.LOG?.info?.('theme.selected', { theme: finalCode });
     window.log?.info?.('theme.selected', { theme: finalCode });
