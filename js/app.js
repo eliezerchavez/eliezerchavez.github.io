@@ -5,8 +5,10 @@ const imgEl = document.getElementById('logo');
 const tagEl = document.getElementById('tagline');
 const actEl = document.getElementById('actions');
 const repEl = document.getElementById('replay');
+const fooEl = document.getElementsByTagName('footer')[0];
 const dbgEl = document.getElementById('debugBox');
 const boxEl = document.querySelector('.logo-box');
+const tmkEl = document.querySelector('.trademark');
 
 const qs = new URLSearchParams(window.location.search);
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -32,7 +34,8 @@ const CONFIG = {
     COLOR: {
         BACKGROUND: '#FFFFFF',
         FOREGROUND: '#002E6D',
-        LOGO: { GLOW: '#1D252C' }
+        LOGO: { GLOW: '#1D252C' },
+        FOOTER: '#1D252C'
     },
     DEBUG: (qs.has('debug') && !['0', 'false'].includes(qs.get('debug')?.toLowerCase()))
 };
@@ -102,14 +105,14 @@ const canClip =
 // THEME MAP
 // ======================================
 const THEME = {
-    "COL-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" } },
-    "COL-02": { bg: { color: "#002E6D" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#002E6D" }, tagline: { color: "#FFFFFF" } },
-    "GRS-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" } },
-    "GRS-02": { bg: { color: "#1D252C" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" } },
-    "NEG-01": { bg: { color: "#1D252C" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" } },
-    "OUT-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" } },
-    "POS-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" } },
-    "POS-02": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#00C4B3" }, tagline: { color: "#00C4B3" } }
+    "COL-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" }, footer: { color: "#1D252C" } },
+    "COL-02": { bg: { color: "#002E6D" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#002E6D" }, tagline: { color: "#FFFFFF" }, footer: { color: "#FFFFFF" } },
+    "GRS-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" }, footer: { color: "#1D252C" } },
+    "GRS-02": { bg: { color: "#1D252C" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" }, footer: { color: "#FFFFFF" } },
+    "NEG-01": { bg: { color: "#1D252C" }, logo: { glow: { color: "#FFFFFF" } }, button: { color: "#1D252C" }, tagline: { color: "#FFFFFF" }, footer: { color: "#FFFFFF" } },
+    "OUT-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#1D252C" }, tagline: { color: "#1D252C" }, footer: { color: "#1D252C" } },
+    "POS-01": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#002E6D" }, tagline: { color: "#002E6D" }, footer: { color: "#1D252C" } },
+    "POS-02": { bg: { color: "#FFFFFF" }, logo: { glow: { color: "#1D252C" } }, button: { color: "#00C4B3" }, tagline: { color: "#00C4B3" }, footer: { color: "#1D252C" } }
 };
 
 // ======================================
@@ -154,6 +157,7 @@ function applyTheme(code) {
     document.body.style.backgroundColor = item.bg?.color || CONFIG.COLOR.BACKGROUND;
     document.documentElement.style.setProperty('--tag-color', item.tagline?.color || CONFIG.COLOR.FOREGROUND);
     document.documentElement.style.setProperty('--btn-color', item.button?.color || CONFIG.COLOR.FOREGROUND);
+    document.documentElement.style.setProperty('--foo-color', item.footer?.color || CONFIG.COLOR.FOOTER);
     LOG.log('Theme applied', { code, bg: item.bg?.color, btn: item.button?.color, tag: item.tagline?.color });
 }
 
@@ -291,9 +295,8 @@ function pickFinalAnimation() {
 // FLOW HELPERS
 // ======================================
 async function preloadLogos(timeoutMs = 300) {
-    return (window.LOG?.timeAsync ? LOG.timeAsync('preloadLogos', async () => {
+    const impl = async () => {
         const codes = Object.keys(THEME);
-
         const hints = codes.map(code => new Promise(resolve => {
             const src = getImgSrc(code); if (!src) return resolve();
             const link = document.createElement('link');
@@ -303,16 +306,18 @@ async function preloadLogos(timeoutMs = 300) {
             link.onload = link.onerror = resolve;
             document.head.appendChild(link);
         }));
-
         const loads = codes.map(code => new Promise(resolve => {
             const src = getImgSrc(code); if (!src) return resolve();
             const im = new Image();
             im.onload = im.onerror = resolve;
             im.src = src;
         }));
-
-        return Promise.race([Promise.all([...hints, ...loads]), new Promise(r => setTimeout(r, timeoutMs))]);
-    }) : (async () => { /* same body */ /* ... */ })());
+        return Promise.race([
+            Promise.all([...hints, ...loads]),
+            new Promise(r => setTimeout(r, timeoutMs))
+        ]);
+    };
+    return window.LOG?.timeAsync ? LOG.timeAsync('preloadLogos', impl) : impl();
 }
 
 async function shuffleForDuration(totalMs = CONFIG.SHOWCASE.DURATION, frameMs = CONFIG.SHOWCASE.FRAME_MIN) {
@@ -387,7 +392,7 @@ let dbgTickerId = null;
 
 function dbgPush(line) {
     if (!CONFIG.DEBUG || !dbgEl) return;
-    const now = performance.now() - (RUNTIME.start || 0);
+    const now = performance.now() - (RUNTIME.times.start || 0);
     dbgBuffer.push(`[+${secs(now)}] ${line}`);
     dbgEl.hidden = false;
     dbgEl.textContent = dbgBuffer.join('\n');
@@ -411,9 +416,11 @@ async function runShowcaseFlow() {
     if (isRunning) return;
     isRunning = true;
 
+    if (tmkEl) tmkEl.style.opacity = 0;
     if (tagEl) tagEl.style.opacity = 0;
     if (actEl) { actEl.classList.remove('show'); actEl.style.opacity = 0; }
     if (repEl) repEl.style.opacity = 0;
+    if (fooEl) fooEl.style.opacity = 0;
 
     rtReset();
     if (CONFIG.DEBUG) { dbgBuffer = []; dbgPush('Flow started'); }
@@ -434,6 +441,7 @@ async function runShowcaseFlow() {
     window.log?.info?.('theme.selected', { theme: finalCode });
 
     await finalReveal(finalCode);
+    if (tmkEl) tmkEl.style.opacity = 1;
     mark('theme', { theme: finalCode });
     dbgPush(`Theme: ${finalCode}`);
 
@@ -456,6 +464,7 @@ async function runShowcaseFlow() {
 
     await sleep(CONFIG.SEQUENCE.REPLAY_DELAY);
     if (repEl) repEl.style.opacity = 1;
+    if (fooEl) fooEl.style.opacity = 1;
     mark('replay');
     if (CONFIG.DEBUG) { dbgPush('Replay visible'); dbgStopTicker(); }
 

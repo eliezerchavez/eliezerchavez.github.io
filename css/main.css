@@ -7,6 +7,7 @@
     --btn-color: #002E6D;
     --bg-color: #FFFFFF;
     --tag-color: #002E6D;
+    --foo-color: #1D252C;
     /* sizing */
     --btn-radius: 12px;
     --btn-size: clamp(40px, 5.5vw, 56px);
@@ -80,6 +81,26 @@ body {
     width: 100%;
 }
 
+.trademark {
+    color: var(--tag-color);
+    font-family: "Delight Regular", "Inter", system-ui, sans-serif;
+    font-size: clamp(12px, 1.4vw, 16px);
+    letter-spacing: .02em;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 0%;
+    text-transform: uppercase;
+    top: 0%;
+    transition: opacity var(--dur-fast) var(--easing);
+    transform: translateY(-10%);
+    user-select: none;
+}
+
+.logo-box.show-marks .trademark {
+    opacity: .85;
+}
+
 /* sweeping light bloom (Lucas) */
 .logo-box::after {
     background-image: var(--logo-url, none);
@@ -123,6 +144,17 @@ body {
     text-align: right;
     transform: translateY(6px);
     transition: opacity var(--dur-med) var(--easing), transform var(--dur-med) var(--easing);
+}
+
+.service-mark {
+    color: var(--tag-color);
+    font-family: "Delight Regular", "Inter", system-ui, sans-serif;
+    font-size: clamp(12px, 1.4vw, 16px);
+    letter-spacing: .02em;
+    margin-left: 4px;
+    text-transform: uppercase;
+    vertical-align: super;
+    user-select: none;
 }
 
 .actions {
@@ -192,6 +224,7 @@ body {
     position: fixed;
     right: 14px;
     width: 32px;
+    z-index: 1200;
 }
 
 .btn:focus-visible,
@@ -208,7 +241,7 @@ body {
     backdrop-filter: blur(2px);
     background: rgba(0, 0, 0, .65);
     border-radius: 10px;
-    bottom: 14px;
+    bottom: 45px;
     box-shadow: var(--elev-strong);
     color: #fff;
     font: 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -287,6 +320,36 @@ body {
 
 .logo-box.lucas::after {
     animation: lucasSweep var(--lucas-sweep-ms, 1200ms) ease-out 1;
+}
+
+/* =========
+   FOOTER
+=========== */
+.site-footer {
+    bottom: 0;
+    color: var(--foo-color);
+    font-family: "Delight Regular", "Inter", system-ui, sans-serif;
+    font-size: 0.75rem;
+    left: 0;
+    line-height: 1.35;
+    padding: 14px clamp(18px, 3vw, 28px);
+    position: fixed;
+    right: 0;
+    text-align: left;
+    width: 100%;
+    z-index: 900;
+
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--easing);
+
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(54px, calc(env(safe-area-inset-right) + 40px));
+}
+
+@media (max-width: 600px) {
+    .site-footer {
+        text-align: center;
+    }
 }
 
 /* ========================================
